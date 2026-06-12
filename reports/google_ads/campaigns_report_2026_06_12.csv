@@ -1,0 +1,23 @@
+Campaign report
+"May 13, 2026 - June 11, 2026"
+Campaign status,Campaign,Budget,Budget name,Budget type,Currency code,Status,Status reasons,Optimization score,Campaign type,Bid strategy type,Cost,Conv. value,Conv. value / cost,Conv. Value / Cost by Conv. Time,Target ROAS,Cost / conv.,Impr.,Clicks,Interaction rate,Avg. CPC,Search lost IS (budget),Conversions,All conv. value,Website Purchases,Website ROAS,Conv. rate,Original conv. value
+Enabled,Catch All | PMax | Normal Margin,50.00, --,Daily,USD,Eligible (Limited),limited by budget,79.22,Performance Max,Maximize Conversion Value (Target ROAS),227.09,249.43,1.10,1.10,250%,170.32,"9,570",109,1.14%,2.08,0.00%,1.33,531.36,1.33,1.10,1.22%,249.43
+Enabled,Branded Search | Alphabet Signs,25.00, --,Daily,USD,Eligible (Limited),bidding strategy limited,91.57,Search,Target Impression Share,199.47,"4,034.60",20.23,20.23, --,8.66,"2,046",241,11.78%,0.83,30.20%,23.05,"5,387.16",23.05,20.23,9.56%,"4,034.60"
+Enabled,Catch All | PMax | High Margin,50.00, --,Daily,USD,Eligible,,84.12,Performance Max,Maximize Conversion Value (Target ROAS),190.69,140.38,0.74,0.74,190%,38.14,"12,541",120,0.96%,1.59,0.00%,5.00,516.13,5.00,0.74,4.17%,140.38
+Enabled,Truck Lettering | PMax | BestSellers,250.00, --,Daily,USD,Eligible,,96.79,Performance Max,Maximize Conversion Value (Target ROAS),7465.49,"10,420.11",1.40,1.57,160%,59.71,"93,988","2,462",4.44%,3.03,11.26%,125.03,"16,861.90",118.03,1.39,3.00%,"10,420.11"
+Enabled,Boat Registration Numbers | Shopping | Low AOV,50.00, --,Daily,USD,Eligible (Learning),bidding strategy learning,92.90,Shopping,Target ROAS,177.84,331.01,1.86,1.86,325%,9.88,"10,121",138,1.36%,1.29,16.02%,18.00,447.26,18.00,1.86,13.04%,331.01
+Enabled,Catch All | PMax | Medium Margin,81.00, --,Daily,USD,Eligible,,87.00,Performance Max,Maximize Conversion Value (Target ROAS),233.80,316.84,1.36,1.36,275%,64.08,"8,796",129,1.47%,1.81,0.00%,3.65,601.55,3.65,1.36,2.83%,316.84
+Enabled,BL00 Building Letters | PMax | Core,200.00, --,Daily,USD,Eligible,,93.49,Performance Max,Maximize Conversion Value (Target ROAS),1270.79,"2,340.72",1.84,1.84,235%,423.60,"30,916",536,2.45%,2.37,14.17%,3.00,"3,848.95",3.00,1.84,0.40%,"2,340.72"
+Enabled,Truck Lettering | PMax | Low AOV,40.00, --,Daily,USD,Eligible,,95.99,Performance Max,Maximize Conversion Value (Target ROAS),92.40,192.67,2.09,2.09,400%,14.59,"7,265",74,1.64%,1.25,2.41%,6.33,301.61,6.33,2.09,5.32%,192.67
+Enabled,Bronze Plaques | Shopping | Low Conversion,50.00, --,Daily,USD,Eligible (Learning),bidding strategy learning, --,Shopping,Target ROAS,0.00,0.00,0.00,0.00,325%,0.00,0,0, --,0, --,0.00,0.00,0.00,0.00,0.00%,0.00
+Enabled,CL00 | Search | Marquee Letters,58.00, --,Daily,USD,Eligible,,79.43,Search,Maximize Conversion Value (Target ROAS),519.36,660.42,1.27,1.27,250%,173.12,"1,646",147,8.93%,3.53,7.90%,3.00,"1,513.94",2.00,1.27,2.04%,660.42
+Enabled,CL00 | PMax | Marquee Lettering,200.00, --,Daily,USD,Eligible (Limited),most asset groups limited by policy,97.01,Performance Max,Maximize Conversion Value (Target ROAS),4045.00,"9,739.09",2.41,2.75,242%,125.18,"107,029","1,509",2.49%,2.68,5.80%,32.31,"15,486.29",32.31,2.41,1.21%,"9,739.09"
+Enabled,Building Letters | Search,170.00, --,Daily,USD,Eligible (Limited),bidding strategy learning; budget constrained soon,79.37,Search,Target Impression Share,1695.03,"1,283.70",0.76,0.78, --,339.01,"7,875",664,8.43%,2.55,38.78%,5.00,"1,283.70",5.00,0.76,0.75%,"1,283.70"
+Enabled,Catch All | PMax | Yard Signs,50.00, --,Daily,USD,Eligible (Learning),bidding strategy learning,86.57,Performance Max,Maximize Conversion Value (Target ROAS),21.96,0.00,0.00,0.00,250%,0.00,"3,083",45,1.46%,0.49,0.00%,0.00,0.00,0.00,0.00,0.00%,0.00
+Total: Campaigns, --, --, --, --,USD, --,, --, --, --,16138.93,"29,708.97",1.84,2.01, --,71.50,"294,876","6,174",3.15%,2.61,12.08%,225.71,"46,779.85",217.71,1.84,2.43%,"29,708.97"
+Total: Account,,,,,USD,,,,,,29856.00,"57,324.44",1.92,2.23,,69.39,"898,868","16,157",4.47%,1.85,16.44%,430.25,"93,551.94",419.25,1.92,1.07%,"57,290.33"
+Total: Display,,,,,USD,,,,Display,,0.00,0.00,0.00,0.00,,0.00,0,0, --,0, --,0.00,0.00,0.00,0.00,0.00%,0.00
+Total: Demand Gen,,,,,USD,,,,Demand Gen,,1781.71,551.70,0.31,0.57,,321.92,"187,116","2,861",12.51%,0.62, --,5.53,"1,127.18",6.53,0.39,0.02%,551.70
+Total: Shopping,,,,,USD,,,,Shopping,,177.84,331.01,1.86,1.86,,9.88,"10,121",138,1.36%,1.29,16.02%,18.00,447.26,18.00,1.86,13.04%,331.01
+Total: Search,,,,,USD,,,,Search,,7092.32,"16,327.36",2.30,2.42,,90.74,"80,711","4,054",5.02%,1.75,33.51%,78.16,"30,006.77",74.16,2.30,1.93%,"16,293.25"
+Total: Performance Max,,,,,USD,,,,Performance Max,,20804.12,"40,114.37",1.93,2.31,,63.32,"620,920","9,104",2.03%,2.29,8.00%,328.55,"61,970.73",320.55,1.93,2.61%,"40,114.37"
