@@ -1,20 +1,25 @@
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  TrendingUp, 
-  Search, 
-  Mail, 
-  Sparkles
-} from 'lucide-react';
+import { Link, useLocation } from "react-router-dom";
+import {
+  LayoutDashboard,
+  TrendingUp,
+  Search,
+  Mail,
+  Sparkles,
+  HelpCircle,
+  Box,
+  Eye,
+} from "lucide-react";
 
 export default function Sidebar() {
   const location = useLocation();
-  
+
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Google Ads', path: '/google-ads', icon: TrendingUp },
-    { name: 'SEO Hub', path: '/seo-hub', icon: Search },
-    { name: 'Email Hub', path: '/email-hub', icon: Mail },
+    { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
+    { name: "Google Ads", path: "/google-ads", icon: TrendingUp },
+    { name: "SEO Hub", path: "/seo-hub", icon: Search },
+    { name: "Email Hub", path: "/email-hub", icon: Mail },
+    { name: "Product Hub", path: "/products", icon: Box },
+    { name: "Heatmap Hub", path: "/heatmap", icon: Eye },
   ];
 
   return (
@@ -24,8 +29,12 @@ export default function Sidebar() {
           <Sparkles className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="font-bold text-lg leading-none tracking-tight">AlphabetSEM</h1>
-          <span className="text-xs text-slate-400 font-medium">Internal MarTech</span>
+          <h1 className="font-bold text-lg leading-none tracking-tight">
+            AlphabetSEM
+          </h1>
+          <span className="text-xs text-slate-400 font-medium">
+            Internal MarTech
+          </span>
         </div>
       </div>
 
@@ -39,8 +48,8 @@ export default function Sidebar() {
               to={item.path}
               className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10'
-                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/10"
+                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
               }`}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -48,10 +57,27 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {/* --- Beautiful visual divider & Help link --- */}
+        <div className="border-t border-slate-800/80 my-4 pt-4">
+          <Link
+            to="/help"
+            className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              location.pathname === "/help"
+                ? "bg-blue-600 text-white shadow-md shadow-blue-600/10"
+                : "text-slate-400 hover:bg-slate-800 hover:text-white"
+            }`}
+          >
+            <HelpCircle className="h-4 w-4 shrink-0 text-slate-400" />
+            Help & README
+          </Link>
+        </div>
       </nav>
 
       <div className="p-4 border-t border-slate-800 bg-slate-950/40 text-center">
-        <p className="text-[11px] text-slate-500 font-medium">Alphabet Signs © 2026</p>
+        <p className="text-[11px] text-slate-500 font-medium">
+          Alphabet Signs © 2026
+        </p>
         <p className="text-[9px] text-slate-600 mt-0.5">v1.0.0-Beta</p>
       </div>
     </aside>

@@ -75,59 +75,46 @@ export default function SeoHub() {
     setLoading(true);
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-    // Fallback template generator if API Key is not set or is a placeholder
     if (!apiKey || apiKey.startsWith("your_")) {
-      setTimeout(() => {
-        setOptimizedMeta({
-          title: `${keywordInput} | Lifetime Warranty | Alphabet Signs`,
-          description: `Buy custom-crafted, durable ${keywordInput}. Direct manufacturer pricing, lifetime guarantees, and fast shipping on all professional outdoor dimensional signs. Design yours today!`,
-          schema: `{
-  "@context": "https://schema.org/",
-  "@type": "Product",
-  "name": "${keywordInput}",
-  "image": "https://www.alphabetsigns.com/images/products/${keywordInput.toLowerCase().replace(/\s+/g, "-")}.jpg",
-  "description": "High-quality, weather-resistant outdoor dimensional letters.",
-  "brand": {
-    "@type": "Brand",
-    "name": "Alphabet Signs"
-  },
-  "offers": {
-    "@type": "AggregateOffer",
-    "priceCurrency": "USD",
-    "lowPrice": "15.00",
-    "highPrice": "450.00",
-    "offerCount": "24",
-    "availability": "https://schema.org/InStock"
-  }
-}`,
-          isMock: true,
-        });
-        setLoading(false);
-      }, 800);
+      setOptimizedMeta({
+        title: `${keywordInput} | Lifetime Warranty | Alphabet Signs`,
+        description: `Buy custom-crafted, durable ${keywordInput}. Direct manufacturer pricing, lifetime guarantees, and fast shipping.`,
+        schema: `{ "@context": "https://schema.org/", "@type": "Product", "name": "${keywordInput}" }`,
+        isMock: true,
+      });
+      setLoading(false);
       return;
     }
 
     try {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
       const prompt = `
-        You are an elite SEO and Copywriting master for 'Alphabet Signs', an e-commerce brand specializing in high-end dimensional lettering, outdoor signs, building letters, and storefront signs.
-
-        Analyze this organic target search keyword: "${keywordInput}"
-
-        Write high-impact, click-maximizing metadata and structured schema. You must return EXACTLY a JSON block matching this structure (no other markdown wrapping besides raw JSON):
+        Write high-impact, click-maximizing metadata and structured schema for keyword: "${keywordInput}".
+        Return EXACTLY a JSON block matching this structure (no markdown formatting):
         {
-          "title": "A CTR-optimized title tag under 60 characters featuring emotional/buying triggers (like Lifetime Warranty, Factory Prices, Fast Sizing, Direct Manufacturer). Make it super professional.",
-          "description": "An optimized meta description under 155 characters that summarizes why the user should buy from Alphabet Signs (fast delivery, commercial durability, direct factory savings). Must be highly compelling.",
-          "schema": "A clean, complete JSON-LD product schema string that includes a Product structure, AggregateOffer, and local brand mapping. Do not include markdown wraps."
+          "title": "CTR title tag under 60 characters with commercial triggers.",
+          "description": "Meta description under 155 characters summarizing value.",
+          "schema": "Clean JSON-LD Product schema string (without script tags or markdown JSON tags)"
         }
       `;
 
-      const result = await model.generateContent(prompt);
-      let text = result.response.text().trim();
+      // RAW NATIVE FETCH BYPASSES SDK HEADER BUG ENTIRELY!
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json" },
+        }),
+      });
 
-      // Clean any potential markdown wrappers that Gemini might have output
+      const responseData = await res.json();
+
+      if (responseData.error) {
+        throw new Error(responseData.error.message);
+      }
+
+      let text = responseData.candidates[0].content.parts[0].text.trim();
       text = text
         .replace(/^```json\s*/i, "")
         .replace(/```$/, "")
@@ -136,8 +123,16 @@ export default function SeoHub() {
       const parsed = JSON.parse(text);
       setOptimizedMeta(parsed);
     } catch (error) {
-      console.error("Error generating metadata with Gemini:", error);
-      alert("Error querying Gemini API. Check console logs.");
+      console.error(
+        "Direct generation failed. Activating local templates.",
+        error,
+      );
+      setOptimizedMeta({
+        title: `${keywordInput} | Lifetime Warranty | Alphabet Signs`,
+        description: `Buy custom-crafted, durable ${keywordInput}. Direct manufacturer pricing, lifetime guarantees, and fast shipping.`,
+        schema: `{ "@context": "https://schema.org/", "@type": "Product", "name": "${keywordInput}" }`,
+        isMock: true,
+      });
     } finally {
       setLoading(false);
     }
