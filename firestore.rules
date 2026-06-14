@@ -1,8 +1,16 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Only allow visual click logs to be WRITTEN (never publicly read or modified!)
+    match /clicks/{document} {
+      allow create: if true; // Storefront can save clicks
+      allow read, update, delete: if false; // No one can read or steal click logs publicly!
+    }
+
+    // Protect all other admin audits, product data, and recommendations
     match /{document=**} {
-      allow read, write: if true; // In production, restrict this to: if request.auth != null;
+      allow read, write: if false; // Lock down all other collections completely
     }
   }
 }
