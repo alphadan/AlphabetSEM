@@ -10,8 +10,9 @@ import GoogleAds from "./pages/GoogleAds";
 import SeoHub from "./pages/SeoHub";
 import EmailHub from "./pages/EmailHub";
 import ProductHub from "./pages/ProductHub";
-import HeatmapHub from "./pages/HeatmapHub"; // <-- 1. Import HeatmapHub!
+import HeatmapHub from "./pages/HeatmapHub";
 import Help from "./pages/Help";
+import McpHub from "./pages/McpHub"; // <-- Imported new page component
 
 function App() {
   return (
@@ -27,8 +28,9 @@ function App() {
             <Route path="/seo-hub" element={<SeoHub />} />
             <Route path="/email-hub" element={<EmailHub />} />
             <Route path="/products" element={<ProductHub />} />
-            <Route path="/heatmap" element={<HeatmapHub />} />{" "}
-            {/* <-- 2. Add /heatmap route! */}
+            <Route path="/heatmap" element={<HeatmapHub />} />
+            <Route path="/mcp-bridge" element={<McpHub />} />{" "}
+            {/* <-- Added route here */}
             <Route path="/help" element={<Help />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>

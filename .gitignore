@@ -7,3 +7,14 @@ dist/
 .env.production.local
 .DS_Store
 .private
+# --- MCP Server Exclusions ---
+mcp-server/node_modules/
+mcp-server/.env
+mcp-server/.env.local
+
+# --- Enterprise Security Shields (Blocks service accounts & keys) ---
+mcp-server/*-key.json
+mcp-server/*credentials*.json
+mcp-server/service-account*.json
+**/*service-account*.json
+**/*gcp-key*.json

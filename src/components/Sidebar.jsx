@@ -8,6 +8,7 @@ import {
   HelpCircle,
   Box,
   Eye,
+  Cpu,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -20,6 +21,7 @@ export default function Sidebar() {
     { name: "Email Hub", path: "/email-hub", icon: Mail },
     { name: "Product Hub", path: "/products", icon: Box },
     { name: "Heatmap Hub", path: "/heatmap", icon: Eye },
+    { name: "MCP Bridge", path: "/mcp-bridge", icon: Cpu }, // <-- Added link here
   ];
 
   return (
@@ -58,7 +60,7 @@ export default function Sidebar() {
           );
         })}
 
-        {/* --- Beautiful visual divider & Help link --- */}
+        {/* --- Divider & Help link --- */}
         <div className="border-t border-slate-800/80 my-4 pt-4">
           <Link
             to="/help"

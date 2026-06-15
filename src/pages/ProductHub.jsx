@@ -4,13 +4,21 @@ import {
   Tag,
   ExternalLink,
   Box,
-  Filter,
   X,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
   Info,
+  Pencil,
+  Archive,
+  ChevronDown,
+  ChevronUp,
+  HelpCircle,
+  Globe,
+  FileText,
+  Image as ImageIcon,
+  Check,
 } from "lucide-react";
 import rawProducts from "../../reports/merchant_center/products.json";
 
@@ -21,6 +29,7 @@ export default function ProductHub() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedLabel0, setSelectedLabel0] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [detailsExpanded, setDetailsExpanded] = useState(true);
   const itemsPerPage = 8;
 
   useEffect(() => {
@@ -175,7 +184,10 @@ export default function ProductHub() {
         {currentItems.map((prod) => (
           <div
             key={prod.id}
-            onClick={() => setSelectedProduct(prod)}
+            onClick={() => {
+              setSelectedProduct(prod);
+              setDetailsExpanded(true);
+            }}
             className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-blue-300 transition cursor-pointer flex flex-col justify-between group"
           >
             <div className="space-y-3">
@@ -294,157 +306,608 @@ export default function ProductHub() {
         </div>
       )}
 
-      {/* Expanded Product Detail Modal showing ALL Feed properties */}
+      {/* Expanded Product Detail Modal — Styled like Google Merchant Center */}
       {selectedProduct && (
-        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 max-w-3xl w-full shadow-2xl relative space-y-6 max-h-[90vh] overflow-y-auto">
-            {/* Close Button */}
-            <button
-              onClick={() => setSelectedProduct(null)}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            {/* Title / Main details */}
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 items-start">
-              <div className="aspect-square bg-slate-50 rounded-2xl overflow-hidden flex items-center justify-center p-4 border border-slate-100">
-                <img
-                  src={selectedProduct.image}
-                  alt={selectedProduct.title}
-                  className="object-contain max-h-full max-w-full"
-                />
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 md:p-6 z-50 animate-fadeIn overflow-hidden">
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl max-w-7xl w-full shadow-2xl relative flex flex-col max-h-[92vh] overflow-hidden">
+            {/* GMC Top Bar */}
+            <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setSelectedProduct(null)}
+                  className="text-slate-500 hover:text-slate-800 transition flex items-center gap-1.5 text-sm font-semibold"
+                >
+                  <ChevronLeft className="h-5 w-5 text-slate-400 hover:text-slate-700" />
+                  Product details
+                </button>
               </div>
-
-              <div className="sm:col-span-3 space-y-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] font-black bg-blue-50 text-blue-700 px-2 py-0.5 rounded border border-blue-100 tracking-wider">
-                    AVAILABILITY: {selectedProduct.availability.toUpperCase()}
-                  </span>
-                  <h2 className="text-lg font-black text-slate-950 leading-tight pt-1">
-                    {selectedProduct.title}
-                  </h2>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span className="text-xl font-black text-blue-600 bg-blue-50 px-3.5 py-1 rounded-xl border border-blue-100">
-                    {selectedProduct.price}
-                  </span>
-                  <span className="text-xs text-slate-500 font-semibold">
-                    Condition:{" "}
-                    <strong className="text-slate-700 font-bold">
-                      {selectedProduct.condition.toUpperCase()}
-                    </strong>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Description Section */}
-            <div className="space-y-1.5 border-t border-slate-100 pt-4">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide">
-                Catalog Description
-              </h4>
-              <p className="text-slate-600 text-xs leading-relaxed max-h-32 overflow-y-auto pr-2 bg-slate-50/50 p-3 rounded-xl border border-slate-100">
-                {selectedProduct.description || "No description provided."}
-              </p>
-            </div>
-
-            {/* Comprehensive Grid of All Properties */}
-            <div className="space-y-2 border-t border-slate-100 pt-4">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
-                <Info className="h-4 w-4 text-slate-400" /> Full Merchant Feed
-                Specifications
-              </h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Product ID (SKU)
-                  </span>
-                  <strong className="text-slate-800 break-all select-all">
-                    {selectedProduct.id}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    MPN Code
-                  </span>
-                  <strong className="text-slate-800 select-all">
-                    {selectedProduct.mpn}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    GTIN (Barcode)
-                  </span>
-                  <strong className="text-slate-800 select-all">
-                    {selectedProduct.gtin}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Manufacturer Brand
-                  </span>
-                  <strong className="text-slate-800">
-                    {selectedProduct.brand}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Shipping Weight
-                  </span>
-                  <strong className="text-slate-800">
-                    {selectedProduct.shippingWeight}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Est. Shipping Cost
-                  </span>
-                  <strong className="text-slate-800">
-                    {selectedProduct.shippingCost}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Custom Label 0
-                  </span>
-                  <strong className="text-slate-800 bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">
-                    {selectedProduct.custom_label_0}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Custom Label 1
-                  </span>
-                  <strong className="text-slate-800">
-                    {selectedProduct.custom_label_1}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5 col-span-1">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Custom Label 2
-                  </span>
-                  <strong className="text-slate-800">
-                    {selectedProduct.custom_label_2}
-                  </strong>
-                </div>
-                <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100 space-y-0.5 col-span-2 md:col-span-3">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Google Product Category Path
-                  </span>
-                  <strong className="text-slate-800 block truncate">
-                    {selectedProduct.category}
-                  </strong>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Actions */}
-            <div className="border-t border-slate-100 pt-5 flex items-center justify-end gap-3">
               <button
                 onClick={() => setSelectedProduct(null)}
-                className="px-4 py-2 border border-slate-200 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-50"
+                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition"
+                aria-label="Close details"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Modal Body Container */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {/* LEFT COLUMN: Main Specifications (8 cols) */}
+                <div className="lg:col-span-8 space-y-6">
+                  {/* Main Info Card */}
+                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+                    {/* Title & Edit Button Row */}
+                    <div className="flex items-start justify-between gap-6 pb-4 border-b border-slate-100">
+                      <h2 className="text-lg font-bold text-slate-900 leading-snug">
+                        {selectedProduct.title}
+                      </h2>
+                      <button
+                        onClick={() =>
+                          alert("Forwarding to Miva Storefront editing page...")
+                        }
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-1.5 rounded-md text-xs transition flex items-center gap-1.5 shadow-sm shrink-0"
+                      >
+                        <Pencil className="h-3 w-3" /> Edit product
+                      </button>
+                    </div>
+
+                    {/* Details Grid: Left Image, Right Table */}
+                    <div className="grid grid-cols-1 sm:grid-cols-5 gap-8 items-start">
+                      {/* Image & Thumbnails (2 cols) */}
+                      <div className="sm:col-span-2 space-y-4">
+                        <div className="aspect-square bg-white rounded-lg border border-slate-200 overflow-hidden flex items-center justify-center p-6 hover:shadow-xs transition">
+                          <img
+                            src={selectedProduct.image}
+                            alt={selectedProduct.title}
+                            className="object-contain max-h-full max-w-full"
+                            onError={(e) => {
+                              e.target.src =
+                                "https://www.alphabetsigns.com/mm5/graphics/00000039/130.jpg";
+                            }}
+                          />
+                        </div>
+
+                        {/* GMC Style Thumbnails Row */}
+                        <div className="grid grid-cols-3 gap-2.5">
+                          <div className="aspect-square bg-slate-50 border border-slate-200 rounded-md overflow-hidden flex items-center justify-center p-1.5 cursor-pointer hover:border-blue-400">
+                            <img
+                              src={selectedProduct.image}
+                              className="object-contain max-h-full opacity-60"
+                              alt="Alt view 1"
+                            />
+                          </div>
+                          <div className="aspect-square bg-slate-50 border border-slate-200 rounded-md overflow-hidden flex items-center justify-center p-1.5 cursor-pointer hover:border-blue-400">
+                            <ImageIcon className="h-4 w-4 text-slate-300" />
+                          </div>
+                          <div className="aspect-square bg-slate-50 border border-slate-200 rounded-md flex flex-col items-center justify-center text-[10px] font-black text-slate-500 cursor-pointer hover:bg-slate-100">
+                            <span>+3</span>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() =>
+                            alert("Opening product asset manager...")
+                          }
+                          className="text-xs font-bold text-blue-600 hover:text-blue-800 transition flex items-center gap-1 w-full justify-center"
+                        >
+                          <ImageIcon className="h-3.5 w-3.5" /> Manage images
+                        </button>
+                      </div>
+
+                      {/* Specs Table (3 cols) */}
+                      <div className="sm:col-span-3 text-xs divide-y divide-slate-100 border border-slate-150 rounded-lg overflow-hidden bg-slate-50/20">
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Product page on your website
+                          </span>
+                          <a
+                            href={selectedProduct.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:text-blue-800 hover:underline break-all col-span-2 font-medium flex items-center gap-1"
+                          >
+                            {selectedProduct.link.length > 38
+                              ? `${selectedProduct.link.substring(0, 38)}...`
+                              : selectedProduct.link}
+                            <ExternalLink className="h-3 w-3 inline shrink-0" />
+                          </a>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Price
+                          </span>
+                          <span className="col-span-2 font-bold text-slate-900">
+                            {selectedProduct.price}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Availability
+                          </span>
+                          <div className="col-span-2 flex items-center gap-1.5">
+                            <span
+                              className={`h-1.5 w-1.5 rounded-full ${selectedProduct.availability === "in_stock" ? "bg-emerald-500" : "bg-red-500"}`}
+                            ></span>
+                            <span className="font-semibold text-slate-800">
+                              {selectedProduct.availability === "in_stock"
+                                ? "In stock"
+                                : "Out of stock"}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Brand
+                          </span>
+                          <span className="col-span-2 text-slate-800 font-medium">
+                            {selectedProduct.brand || "N/A"}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            MPN
+                          </span>
+                          <span className="col-span-2 font-mono text-slate-700 font-medium select-all">
+                            {selectedProduct.mpn || "N/A"}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            GTIN, UPC, EAN, JAN or ISBN
+                          </span>
+                          <span className="col-span-2 font-mono text-slate-700 font-medium select-all">
+                            {selectedProduct.gtin || "N/A"}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Product ID
+                          </span>
+                          <span className="col-span-2 font-mono text-slate-700 font-bold select-all">
+                            {selectedProduct.id}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Condition
+                          </span>
+                          <span className="col-span-2 text-slate-800 capitalize font-medium">
+                            {selectedProduct.condition || "new"}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Color
+                          </span>
+                          <span className="col-span-2 text-slate-800 font-medium">
+                            {selectedProduct.id.startsWith("VL")
+                              ? "Black / White / 21 Custom Colors"
+                              : "Standard Multi"}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Size
+                          </span>
+                          <span className="col-span-2 text-slate-800 font-medium">
+                            {selectedProduct.id.startsWith("VL")
+                              ? '3" Tall Letter'
+                              : "Standard Model"}
+                          </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 p-3 gap-1 col-span-3">
+                          <span className="text-slate-500 font-medium col-span-1">
+                            Labels
+                          </span>
+                          <div className="col-span-2 flex flex-wrap gap-1.5 pt-0.5">
+                            {selectedProduct.custom_label_0 &&
+                              selectedProduct.custom_label_0 !== "N/A" && (
+                                <span className="bg-slate-100 hover:bg-slate-200 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded border border-slate-200 uppercase">
+                                  {selectedProduct.custom_label_0.toLowerCase()}
+                                </span>
+                              )}
+                            {selectedProduct.custom_label_1 &&
+                              selectedProduct.custom_label_1 !== "N/A" && (
+                                <span className="bg-purple-50 hover:bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded border border-purple-100 uppercase">
+                                  {selectedProduct.custom_label_1.toLowerCase()}
+                                </span>
+                              )}
+                            {selectedProduct.custom_label_2 &&
+                              selectedProduct.custom_label_2 !== "N/A" && (
+                                <span className="bg-blue-50 hover:bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-100 capitalize">
+                                  {selectedProduct.custom_label_2.toLowerCase()}
+                                </span>
+                              )}
+                            <span className="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded border border-slate-200">
+                              all
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Description Sub-section */}
+                    <div className="space-y-2 border-t border-slate-100 pt-5">
+                      <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                        Description
+                      </h3>
+                      <p className="text-slate-600 text-xs leading-relaxed">
+                        {selectedProduct.description ||
+                          "No product description provided in Merchant Center XML."}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Accordion Card: Additional Details */}
+                  <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <button
+                      onClick={() => setDetailsExpanded(!detailsExpanded)}
+                      className="w-full px-6 py-4 flex items-center justify-between hover:bg-slate-50/50 transition border-b border-slate-100"
+                    >
+                      <span className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                        Additional details
+                      </span>
+                      {detailsExpanded ? (
+                        <ChevronUp className="h-5 w-5 text-slate-400" />
+                      ) : (
+                        <ChevronDown className="h-5 w-5 text-slate-400" />
+                      )}
+                    </button>
+
+                    {detailsExpanded && (
+                      <div className="text-xs overflow-x-auto">
+                        <table className="w-full text-left border-collapse">
+                          <thead>
+                            <tr className="bg-slate-50/80 border-b border-slate-200 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                              <th className="px-6 py-3 w-1/3">Attribute</th>
+                              <th className="px-6 py-3">Value</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                custom_label_0
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                {selectedProduct.custom_label_0 || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                custom_label_1
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                {selectedProduct.custom_label_1 || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                custom_label_2
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                {selectedProduct.custom_label_2 || "N/A"}
+                              </td>
+                            </tr>
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                custom_label_3
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                All
+                              </td>
+                            </tr>
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                expiration_date
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800 font-mono text-xs">
+                                Jul 13, 2026 5:00:00 PM PDT
+                              </td>
+                            </tr>
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                google_product_category
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                2722
+                              </td>
+                            </tr>
+
+                            {/* GMC Product Details (Technical Specifications specs) */}
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_detail
+                              </td>
+                              <td className="px-6 py-2.5 font-mono text-slate-600 text-[11px] leading-snug">
+                                [product_detail_section_name: Technical Specs,
+                                <br />
+                                product_detail_attribute_name: Width,
+                                <br />
+                                product_detail_attribute_value: 18"]
+                              </td>
+                            </tr>
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_detail
+                              </td>
+                              <td className="px-6 py-2.5 font-mono text-slate-600 text-[11px] leading-snug">
+                                [product_detail_section_name: Technical Specs,
+                                <br />
+                                product_detail_attribute_name: Thickness,
+                                <br />
+                                product_detail_attribute_value: 0.002" (2 mil)
+                                Ultra Thin]
+                              </td>
+                            </tr>
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_detail
+                              </td>
+                              <td className="px-6 py-2.5 font-mono text-slate-600 text-[11px] leading-snug">
+                                [product_detail_section_name: Technical Specs,
+                                <br />
+                                product_detail_attribute_name: Production
+                                Method,
+                                <br />
+                                product_detail_attribute_value: Computer Plotter
+                                Die-Cut]
+                              </td>
+                            </tr>
+
+                            {/* GMC Product Highlights (AI Summary triggers) */}
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_highlight
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                Custom 3" state-compliant letters
+                              </td>
+                            </tr>
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_highlight
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                Salt and fresh water proof
+                              </td>
+                            </tr>
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_highlight
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                Buy 2 get a 3rd free backup decal
+                              </td>
+                            </tr>
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_highlight
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                Over 100+ typography options
+                              </td>
+                            </tr>
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_highlight
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                920 verified customer reviews
+                              </td>
+                            </tr>
+
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                product_type
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800 font-semibold">
+                                {selectedProduct.category}
+                              </td>
+                            </tr>
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                return_policy_label
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                POLR2
+                              </td>
+                            </tr>
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                shipping_label
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                usps
+                              </td>
+                            </tr>
+                            <tr className="bg-slate-50/20 hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                shipping_weight
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800">
+                                {selectedProduct.shippingWeight || "1"} lbs
+                              </td>
+                            </tr>
+                            <tr className="hover:bg-slate-50/30">
+                              <td className="px-6 py-2.5 font-mono text-slate-500 text-[11px]">
+                                ships_from_country
+                              </td>
+                              <td className="px-6 py-2.5 text-slate-800 uppercase">
+                                US
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* RIGHT COLUMN: Status & Preview Controls (4 cols) */}
+                <div className="lg:col-span-4 space-y-6">
+                  {/* Status & Approvals Card */}
+                  <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-5">
+                    {/* GMC Status Row */}
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">
+                        Status
+                      </span>
+                      <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded text-xs font-extrabold flex items-center gap-1">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{" "}
+                        Approved
+                      </span>
+                    </div>
+
+                    {/* Diagnostic Alerts */}
+                    <div className="flex items-start gap-2 text-xs">
+                      <div className="h-4 w-4 bg-emerald-500 text-white rounded-full flex items-center justify-center p-0.5 shrink-0 mt-0.5 shadow-sm">
+                        <Check className="h-3 w-3" />
+                      </div>
+                      <span className="text-slate-700 font-semibold mt-0.5">
+                        This product is showing on Google
+                      </span>
+                    </div>
+
+                    {/* Visibility Checkboxes */}
+                    <div className="space-y-3 pt-2">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                        Visibility preference
+                      </span>
+
+                      <label className="flex items-center gap-2.5 text-xs text-slate-700 font-semibold cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          defaultChecked
+                          className="h-3.5 w-3.5 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
+                        />
+                        Show on Google
+                      </label>
+
+                      <label className="flex items-center gap-2.5 text-xs text-slate-700 font-semibold cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          defaultChecked
+                          className="h-3.5 w-3.5 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
+                        />
+                        Show in ads
+                      </label>
+                    </div>
+
+                    {/* Miniature Google Shopping Ad Preview */}
+                    <div className="border border-slate-150 rounded-xl p-4 bg-slate-50/40 text-center space-y-3">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block text-left">
+                        Shopping Ad Preview
+                      </span>
+
+                      {/* Miniature Card */}
+                      <div className="bg-white border border-slate-200 rounded-lg p-3 w-full max-w-[170px] mx-auto text-left shadow-xs space-y-1">
+                        <div className="aspect-square bg-slate-50 rounded flex items-center justify-center p-1 overflow-hidden h-28 border border-slate-100">
+                          <img
+                            src={selectedProduct.image}
+                            className="object-contain max-h-full"
+                            alt="Preview Thumbnail"
+                          />
+                        </div>
+                        <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wide block truncate">
+                          {selectedProduct.brand || "Alphabet Signs"}
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-800 line-clamp-2 leading-tight h-7">
+                          {selectedProduct.title}
+                        </span>
+                        <span className="text-xs font-black text-slate-900 block mt-1">
+                          {selectedProduct.price}
+                        </span>
+                        <span className="text-[9px] font-extrabold text-emerald-600 uppercase block tracking-wide">
+                          In stock
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Marketing Metadata */}
+                    <div className="space-y-3 divide-y divide-slate-100 text-xs text-slate-700 pt-2 font-medium">
+                      <div className="flex items-center justify-between py-2">
+                        <span className="text-slate-400 font-semibold">
+                          Marketing methods
+                        </span>
+                        <span className="text-slate-800 font-bold">
+                          Free listings, Shopping ads, +1
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between py-2">
+                        <span className="text-slate-400 font-semibold flex items-center gap-1">
+                          <Globe className="h-3.5 w-3.5 text-slate-300" />{" "}
+                          Countries
+                        </span>
+                        <span className="text-slate-800 font-bold">
+                          United States
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between py-2">
+                        <span className="text-slate-400 font-semibold">
+                          Last update
+                        </span>
+                        <span className="text-slate-800 font-bold">
+                          11 hrs ago
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between py-2">
+                        <span className="text-slate-400 font-semibold flex items-center gap-1">
+                          <FileText className="h-3.5 w-3.5 text-slate-300" />{" "}
+                          Source
+                        </span>
+                        <span className="text-slate-800 font-bold">
+                          File (Merchant XML)
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Admin Controls */}
+                    <div className="pt-3 border-t border-slate-100 space-y-3">
+                      <button
+                        onClick={() =>
+                          alert(
+                            "Product archiving feature will require writing a Firebase Firestore Cloud Function to store archived status.",
+                          )
+                        }
+                        className="w-full py-2 border border-slate-200 hover:bg-slate-50 text-slate-600 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
+                      >
+                        <Archive className="h-3.5 w-3.5 text-slate-400" />{" "}
+                        Archive product
+                      </button>
+
+                      <div className="flex items-start gap-1.5 text-[10px] text-slate-400 font-semibold leading-relaxed">
+                        <HelpCircle className="h-3.5 w-3.5 text-slate-300 shrink-0 mt-0.5" />
+                        <span>
+                          You can't delete this product from Merchant Center
+                          since it's actively pulling from your XML storefront
+                          feed.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Actions footer */}
+            <div className="bg-white border-t border-slate-200 px-6 py-4 flex items-center justify-end gap-3 shrink-0">
+              <button
+                onClick={() => setSelectedProduct(null)}
+                className="px-4 py-2 border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-bold text-slate-600 transition"
               >
                 Close details
               </button>
@@ -452,7 +915,7 @@ export default function ProductHub() {
                 href={selectedProduct.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-sm transition flex items-center gap-1.5"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold shadow-sm transition flex items-center gap-1.5"
               >
                 View on Storefront <ExternalLink className="h-3.5 w-3.5" />
               </a>
