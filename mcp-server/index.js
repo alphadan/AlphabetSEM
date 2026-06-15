@@ -7,6 +7,9 @@ import {
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Import Official Google Cloud Client SDKs
 import { BigQuery } from "@google-cloud/bigquery";
@@ -14,9 +17,16 @@ import { Firestore } from "@google-cloud/firestore";
 
 dotenv.config();
 
-// ================= WEEK 5 CONFIGURATIONS =================
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const productsPath = path.join(
+  __dirname,
+  "../reports/merchant_center/products.json",
+);
 
-// False Positive Safety Shield - Protected terms that should NEVER be negated
+// ================= COGNITIVE AGENT CONFIGURATIONS =================
+
+// False Positive Safety Shield
 const SAFETY_SHIELD = [
   {
     term: "gemini",
@@ -401,8 +411,6 @@ async function handleToolCall(name, args) {
       };
     }
 
-    // ================== WEEK 5 LIVE AUDITING AGENT ==================
-
     case "audit_negative_keywords": {
       const minSpend = args.min_spend || 1.0;
       const minClicks = args.min_clicks || 1;
@@ -417,7 +425,6 @@ async function handleToolCall(name, args) {
           console.error("Initiating live Search Query BigQuery extraction...");
           const bq = new BigQuery({ keyFilename });
 
-          // Live extraction SQL targeting metrics_cost_micros with conversions = 0
           const sqlQuery = `
             SELECT
               c.campaign_name,
@@ -447,7 +454,7 @@ async function handleToolCall(name, args) {
         }
       }
 
-      // 2. Sandbox simulation fallback if BQ fails/isn't ready
+      // Sandbox Fallback
       if (!liveMode) {
         console.error("Using local search query sandbox simulation dataset...");
         rows = [
@@ -492,29 +499,27 @@ async function handleToolCall(name, args) {
             clicks: 15,
             cost_usd: 35.2,
             conversions: 0,
-          }, // core product (should be shielded)
+          },
           {
             campaign_name: "Branded Search | Alphabet Signs",
             search_query: "gemini letters brushed bronze",
             clicks: 12,
             cost_usd: 28.4,
             conversions: 0,
-          }, // core manufacturer (should be shielded)
+          },
           {
             campaign_name: "Building Letters | Search",
             search_query: "how to paint wood school alphabets",
             clicks: 14,
             cost_usd: 31.2,
             conversions: 0,
-          }, // low intent educational
+          },
         ];
       }
 
-      // 3. Process the Rows using Heuristic Rules & Safety Shields
       const falsePositivesSafety = [];
       let totalWastedSpend = 0;
 
-      // Group arrays for expected recommendation categories
       const categoriesList = [
         {
           id: "block-generic-alphabet-spam",
@@ -560,7 +565,6 @@ async function handleToolCall(name, args) {
 
         const normalizedQuery = queryText.toLowerCase();
 
-        // A. Check against the False Positive Safety Shield first!
         const shieldMatch = SAFETY_SHIELD.find((s) =>
           normalizedQuery.includes(s.term),
         );
@@ -572,14 +576,12 @@ async function handleToolCall(name, args) {
             clicks: row.clicks,
             cost: `$${row.cost_usd.toFixed(2)}`,
           });
-          return; // SHIELDED! Skip negative keyword assignment
+          return;
         }
 
-        // B. Run through Heuristic Bleed Filters
         let matchedCategoryId = null;
         let seedKeyword = null;
 
-        // 1. Toddler Alphabet Spam / Keyboard Spam
         const singleLetterCount = (
           normalizedQuery.match(/(?:^|\s)[a-z](?=\s|$)/g) || []
         ).length;
@@ -595,9 +597,7 @@ async function handleToolCall(name, args) {
               .find(
                 (w) => w.length === 1 || ["alphabets", "alphabet"].includes(w),
               ) || "alphabet";
-        }
-        // 2. Kids & Educational Supplies
-        else if (
+        } else if (
           /jack hartmann|classroom|kindergarten|preschool|bulletin board|abc song|alphabet song|school abc|educational|toys/i.test(
             normalizedQuery,
           )
@@ -610,9 +610,7 @@ async function handleToolCall(name, args) {
               : normalizedQuery.includes("classroom")
                 ? "classroom"
                 : "toys";
-        }
-        // 3. Spanish / Language Incongruence
-        else if (
+        } else if (
           /letras|para|avisos|publicitarios|grande|en grande/i.test(
             normalizedQuery,
           )
@@ -621,9 +619,7 @@ async function handleToolCall(name, args) {
           seedKeyword = normalizedQuery.includes("letras")
             ? "letras"
             : "publicitarios";
-        }
-        // 4. High Leeway Unrelated
-        else if (
+        } else if (
           /spouse|god is showing you|pumpkin patch|breakfast flag|honey for sale|peach|produce me/i.test(
             normalizedQuery,
           )
@@ -637,7 +633,6 @@ async function handleToolCall(name, args) {
               ) || "spouse";
         }
 
-        // Accumulate bleed cost and seed negative keywords
         if (matchedCategoryId) {
           totalWastedSpend += row.cost_usd;
           const cat = categoriesList.find((c) => c.id === matchedCategoryId);
@@ -648,7 +643,6 @@ async function handleToolCall(name, args) {
         }
       });
 
-      // Format output recommendations matching our expected dashboard format
       const formattedRecommendations = categoriesList
         .filter((cat) => cat.cost > 0)
         .map((cat) => ({
@@ -682,6 +676,413 @@ async function handleToolCall(name, args) {
           },
         ],
       };
+    }
+
+    case "cross_reference_catalog_pricing": {
+      const competitorUrl = args.competitor_url;
+      const targetProductId = args.product_id;
+
+      console.error(
+        `Initiating competitor catalog cross-reference for URL: "${competitorUrl}"...`,
+      );
+
+      // 1. Scrape the competitor page first using our existing scraper pipeline
+      let competitorText = "";
+      let competitorTitle = "";
+      const scrapeResult = await handleToolCall("scrape_competitor", {
+        url: competitorUrl,
+      });
+
+      try {
+        const parsedScrape = JSON.parse(scrapeResult.content[0].text);
+        competitorTitle = parsedScrape.title || "Competitor Page";
+        competitorText =
+          parsedScrape.markdownSnippet || JSON.stringify(parsedScrape);
+      } catch {
+        competitorText = scrapeResult.content[0].text;
+      }
+
+      // 2. Extract competitor price from page content via intelligent regex scans
+      const priceMatches = competitorText.match(/\$?([0-9]+\.[0-9]{2})/g) || [];
+      const competitorPrices = priceMatches
+        .map((p) => parseFloat(p.replace(/[^0-9.]/g, "")))
+        .filter((p) => p > 0);
+
+      const competitorPrice =
+        competitorPrices.length > 0 ? Math.min(...competitorPrices) : null;
+
+      // 3. Load Alphabet Signs' Google Merchant Center Feed
+      let ourProduct = null;
+      try {
+        const rawCatalog = fs.readFileSync(productsPath, "utf8");
+        const catalog = JSON.parse(rawCatalog);
+
+        if (targetProductId) {
+          ourProduct = catalog.find((p) => p.id === targetProductId);
+        } else {
+          // Auto-Matching by keyword title overlap
+          const competitorWords = competitorTitle
+            .toLowerCase()
+            .split(/\s+/)
+            .filter((w) => w.length > 3);
+          let bestScore = 0;
+          catalog.forEach((p) => {
+            const ourWords = p.title.toLowerCase().split(/\s+/);
+            const score = competitorWords.filter((w) =>
+              ourWords.includes(w),
+            ).length;
+            if (score > bestScore) {
+              bestScore = score;
+              ourProduct = p;
+            }
+          });
+        }
+      } catch (err) {
+        console.error(
+          "Error reading Merchant Center catalog fallback:",
+          err.message,
+        );
+      }
+
+      // 4. Perform Price Matching & Competitive Analysis
+      if (!ourProduct) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  error: "Catalog Match Failed",
+                  tip: "Please specify a valid product_id to manually match, or make sure the competitor page title contains keywords matching your products.",
+                  competitorExtractedTitle: competitorTitle,
+                  competitorEstimatedPrice: competitorPrice
+                    ? `$${competitorPrice.toFixed(2)}`
+                    : "Unknown",
+                },
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      }
+
+      const ourPriceFloat =
+        parseFloat(ourProduct.price.replace(/[^0-9.]/g, "")) || 0;
+      let analysisResult = {};
+
+      if (competitorPrice && ourPriceFloat > 0) {
+        const priceDiff = ourPriceFloat - competitorPrice;
+        const percentageDiff = (Math.abs(priceDiff) / ourPriceFloat) * 100;
+
+        let position = "undercutting";
+        let recommendation =
+          "You are currently more competitive! Maintain this price point to maximize Performance Max click-through conversion rates.";
+
+        if (priceDiff > 0) {
+          position = "overpriced";
+          recommendation = `Competitor is undercutting you by $${priceDiff.toFixed(2)} (${percentageDiff.toFixed(1)}%). We suggest a 10% price promotion on ${ourProduct.id} to recover shopping ad traffic and click rates.`;
+        } else if (priceDiff === 0) {
+          position = "matched";
+          recommendation =
+            "Pricing is identical. Improve conversion rate by highlighting free shipping, rapid manufacturing, or warranty terms on your landing page H1 tags.";
+        }
+
+        analysisResult = {
+          status: "success",
+          competitorPage: {
+            title: competitorTitle,
+            url: competitorUrl,
+            estimatedPrice: `$${competitorPrice.toFixed(2)}`,
+          },
+          alphabetSignsProduct: {
+            id: ourProduct.id,
+            title: ourProduct.title,
+            price: ourProduct.price,
+            link: ourProduct.link,
+          },
+          pricingComparison: {
+            alphabetSignsPrice: `$${ourPriceFloat.toFixed(2)}`,
+            competitorPrice: `$${competitorPrice.toFixed(2)}`,
+            difference: `$${priceDiff.toFixed(2)}`,
+            percentageDifference: `${percentageDiff.toFixed(1)}%`,
+            competitivePosition: position,
+          },
+          actionableRecommendation: recommendation,
+        };
+      } else {
+        analysisResult = {
+          status: "partial_match",
+          competitorPage: {
+            title: competitorTitle,
+            url: competitorUrl,
+            estimatedPrice:
+              "Could not automatically parse pricing pattern from HTML/Markdown",
+          },
+          alphabetSignsProduct: {
+            id: ourProduct.id,
+            title: ourProduct.title,
+            price: ourProduct.price,
+            link: ourProduct.link,
+          },
+          actionableRecommendation:
+            "Manual audit required. Scrape completed but no clear currency pattern ($xx.xx) was discovered on the competitor storefront. Review competitor link.",
+        };
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(analysisResult, null, 2),
+          },
+        ],
+      };
+    }
+
+    case "autonomous_pricing_audit": {
+      const targetCategory =
+        args.product_category || "boat registration numbers";
+      const maxCompetitors = args.max_competitors_to_scan || 2;
+
+      console.error(
+        `Starting autonomous pricing audit for category: "${targetCategory}"...`,
+      );
+
+      try {
+        console.error(
+          "Searching Google to locate high-ranking competitor storefronts...",
+        );
+        const searchResult = await handleToolCall("google_search", {
+          query: targetCategory,
+          num_results: 5,
+        });
+        const competitors = JSON.parse(searchResult.content[0].text);
+
+        const validCompetitors = competitors
+          .filter((c) => {
+            const url = c.link.toLowerCase();
+            return (
+              !url.includes("wikipedia.org") &&
+              !url.includes("amazon.com") &&
+              !url.includes("ehow.com") &&
+              !url.includes("alphabetsigns.com")
+            );
+          })
+          .slice(0, maxCompetitors);
+
+        if (validCompetitors.length === 0) {
+          throw new Error(
+            "No valid commercial competitors discovered on Google Page 1.",
+          );
+        }
+
+        console.error(
+          `Autonomous Pricing Agent found ${validCompetitors.length} competitors to crawl.`,
+        );
+
+        const auditComparisons = [];
+        let undercutsCount = 0;
+
+        for (const comp of validCompetitors) {
+          console.error(`Auditing pricing on: ${comp.link}...`);
+          const crossRef = await handleToolCall(
+            "cross_reference_catalog_pricing",
+            { competitor_url: comp.link },
+          );
+          const parsed = JSON.parse(crossRef.content[0].text);
+
+          if (parsed.status === "success") {
+            auditComparisons.push(parsed);
+            if (
+              parsed.pricingComparison?.competitivePosition === "overpriced"
+            ) {
+              undercutsCount++;
+            }
+          }
+        }
+
+        const summaryStatus =
+          undercutsCount > 0
+            ? "🚨 Alert: Competitive undercuts detected on your core product lines!"
+            : "🟢 Secure: Your catalog pricing is highly competitive across active Google search results.";
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  source: "Autonomous AlphaPilot Price-Compliance Audit",
+                  productCategoryAudited: targetCategory,
+                  statusSummary: summaryStatus,
+                  totalCompetitorsAudited: validCompetitors.length,
+                  activeUndercutsFound: undercutsCount,
+                  auditComparisons: auditComparisons,
+                },
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("Autonomous price audit error:", err.message);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  source: "Autonomous AlphaPilot Price Audit Attempt Failed",
+                  errorMessage: err.message,
+                  sandboxModeFallbackHint:
+                    "Please verify that your SERP_API_KEY is configured correctly to let Gemini search Google on autopilot.",
+                },
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      }
+    }
+
+    // ================== WEEK 8 AUTONOMOUS SEO COPYWRITING AGENT ==================
+
+    case "generate_seo_blog_content": {
+      const topic = args.blog_topic;
+      const primaryKeyword = args.primary_keyword;
+      const secondaryKeywords = args.secondary_keywords || [];
+      const geminiApiKey =
+        process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+
+      console.error(
+        `Autonomous SEO Blog Copywriter active for topic: "${topic}"...`,
+      );
+
+      if (!geminiApiKey || geminiApiKey === "AIzaSyYourGeminiAPIKeyHere") {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  error: "Configuration Needed",
+                  tip: "Please configure your GEMINI_API_KEY inside mcp-server/.env to authorize copywriting generations.",
+                  fallbackSandboxSnippet: `# 📘 Blog Stub: How to Install Dimensional building letters\n\nDimensional building letters add an incredible, premium feel to any commercial storefront... [Configure GEMINI_API_KEY to retrieve full article]`,
+                },
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      }
+
+      try {
+        // Step 1: Scan competitor Page 1 titles to extract SERP density context
+        console.error(
+          "Scanning Google SERPs for competitor contextual density...",
+        );
+        const serpResult = await handleToolCall("google_search", {
+          query: topic,
+          num_results: 3,
+        });
+        const serpData = JSON.parse(serpResult.content[0].text);
+
+        const serpContext = serpData
+          .map(
+            (res) =>
+              `Competitor Title: "${res.title}" | Snippet: "${res.snippet}"`,
+          )
+          .join("\n");
+
+        // Step 2: Build the optimized copywriting instruction packet
+        const prompt = {
+          contents: [
+            {
+              parts: [
+                {
+                  text: `You are an elite, enterprise-grade MarTech copywriter and senior SEO consultant specializing in commercial sign building, custom dimension sign lettering, vehicle decals, and marketing copy.
+
+Generate a comprehensive, high-ranking, SEO-optimized long-form blog article tailored for the website of Alphabet Signs (custom dimensional sign letters manufacturer).
+
+Target Blog Topic: "${topic}"
+Primary Target Keyword: "${primaryKeyword}"
+Secondary Keywords: ${JSON.stringify(secondaryKeywords)}
+
+Here is the current live Page 1 competitor SERP landscape context to beat:
+${serpContext}
+
+Provide your response in a structured JSON packet with these EXACT fields:
+{
+  "seoMetadata": {
+    "titleTag": "An optimized title tag under 60 characters with the primary keyword on line 1",
+    "metaDescription": "A compelling meta description under 155 characters designed to maximize search CTR",
+    "primaryKeywordDensityRecommendation": "Short strategic summary"
+  },
+  "blogArticleMarkdown": "The complete, formatted long-form blog post (at least 800-1200 words) in beautiful Markdown. Use proper H1, H2, and H3 headers. Include detailed paragraphs, step-by-step bullet points, recommended image alt texts (e.g. ![Alt text here]), and a call-to-action directing readers to explore Alphabet Signs catalog product pages."
+}`,
+                },
+              ],
+            },
+          ],
+        };
+
+        console.error("Calling Gemini 2.5 Flash Reasoning Engine...");
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
+
+        const response = await fetch(geminiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(prompt),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Gemini API returned status ${response.status}`);
+        }
+
+        const data = await response.json();
+        const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+        // Strip markdown backticks if Gemini wrapped the JSON response
+        const cleanJsonText = rawText.replace(/^```json|```$/gi, "").trim();
+        const parsedReport = JSON.parse(cleanJsonText);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  source: "Google Gemini 2.5 Flash SEO Copywriter",
+                  ...parsedReport,
+                },
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      } catch (err) {
+        console.error("Gemini copywriting error:", err.message);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  error: `SEO Copywriter Failed: ${err.message}`,
+                  rawDetails: err.stack,
+                },
+                null,
+                2,
+              ),
+            },
+          ],
+        };
+      }
     }
 
     default:
@@ -800,6 +1201,75 @@ function createMcpServer() {
                 default: 1,
               },
             },
+          },
+        },
+        {
+          name: "cross_reference_catalog_pricing",
+          description:
+            "Scrapes a competitor storefront product page, extracts their current price, matches it to your live Google Merchant Center catalog, and runs competitive price comparison analysis.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              competitor_url: {
+                type: "string",
+                description: "The competitor product page URL to audit.",
+              },
+              product_id: {
+                type: "string",
+                description:
+                  "Optional product SKU/ID from your Merchant feed to lock the match. If omitted, matching is resolved automatically by title similarity.",
+              },
+            },
+            required: ["competitor_url"],
+          },
+        },
+        {
+          name: "autonomous_pricing_audit",
+          description:
+            "Automated Price Matcher Agent: Automatically searches Google for competitor listings, scrapes their storefront price points, maps them against your live XML feed, and creates price margin alerts.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              product_category: {
+                type: "string",
+                description:
+                  "Target product category to search on Google (default: 'boat registration numbers').",
+                default: "boat registration numbers",
+              },
+              max_competitors_to_scan: {
+                type: "number",
+                description:
+                  "Maximum competitors to scan on Google Page 1 (default 2)",
+                default: 2,
+              },
+            },
+          },
+        },
+        {
+          name: "generate_seo_blog_content",
+          description:
+            "Autonomous Copywriting Agent: Runs competitive SERP density analysis, triggers Gemini 2.5 Flash, and drafts complete, high-ranking long-form blog articles in markdown.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              blog_topic: {
+                type: "string",
+                description:
+                  "The marketing topic of the article to generate (e.g. 'how to install dimensional sign letters').",
+              },
+              primary_keyword: {
+                type: "string",
+                description:
+                  "The primary high-volume keyword to target for rankings.",
+              },
+              secondary_keywords: {
+                type: "array",
+                items: { type: "string" },
+                description:
+                  "Optional list of secondary semantic keywords to build density.",
+              },
+            },
+            required: ["blog_topic", "primary_keyword"],
           },
         },
       ],
