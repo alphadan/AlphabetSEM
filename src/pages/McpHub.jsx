@@ -14,10 +14,6 @@ import {
   AlertTriangle,
   CheckCircle,
   XCircle,
-  TrendingDown,
-  DollarSign,
-  TrendingUp,
-  Sparkles,
 } from "lucide-react";
 
 export default function McpHub() {
@@ -54,6 +50,19 @@ export default function McpHub() {
   const [copywriterResults, setCopywriterResults] = useState(null);
   const [copywriterLoading, setCopywriterLoading] = useState(false);
 
+  // --- RESTORED PLAYGROUND STATE ---
+  const [selectedTool, setSelectedTool] = useState("run_bigquery_query");
+  const [searchQuery, setSearchQuery] = useState("outdoor cast metal letters");
+  const [scrapeUrl, setScrapeUrl] = useState("https://www.alphabetsigns.com");
+  const [sqlQuery, setSqlQuery] = useState(
+    "SELECT campaign_name, cost, conversions, roas FROM campaign_performance WHERE cost > 100 ORDER BY roas ASC;",
+  );
+  const [firestoreCollection, setFirestoreCollection] =
+    useState("optimizations");
+  const [numResults, setNumResults] = useState(3);
+  const [playgroundOutput, setPlaygroundOutput] = useState(null);
+  const [playgroundLoading, setPlaygroundLoading] = useState(false);
+
   // General server diagnostics
   const [serverLogs, setServerLogs] = useState([
     "Initializing AlphabetSEM cockpit...",
@@ -82,11 +91,11 @@ export default function McpHub() {
     checkStatus().then((isOnline) => {
       if (isOnline) {
         addLog(
-          "🟢 Successfully linked to direct HTTP API. Server responds online.",
+          "Successfully linked to direct HTTP API. Server responds online.",
         );
       } else {
         addLog(
-          "❌ Connection closed. Ensure 'npm start' is running in 'mcp-server/'.",
+          "Connection closed. Ensure 'npm start' is running in 'mcp-server/'.",
         );
       }
     });
@@ -207,6 +216,58 @@ export default function McpHub() {
     }
   };
 
+  // 4. RESTORED: Run Raw Tool Playgrounds
+  const handleRunPlaygroundTool = async () => {
+    setPlaygroundLoading(true);
+    setPlaygroundOutput(null);
+
+    addLog(`Invoking raw tool: '${selectedTool}'...`);
+
+    try {
+      let params = {};
+      if (selectedTool === "google_search") {
+        params = { query: searchQuery, num_results: parseInt(numResults) };
+      } else if (selectedTool === "scrape_competitor") {
+        params = { url: scrapeUrl };
+      } else if (selectedTool === "run_bigquery_query") {
+        params = { query: sqlQuery };
+      } else if (selectedTool === "query_firestore") {
+        params = { collection: firestoreCollection };
+      } else if (selectedTool === "audit_negative_keywords") {
+        params = {
+          min_spend: parseFloat(minSpend),
+          min_clicks: parseInt(minClicks),
+        };
+      }
+
+      const response = await fetch("http://localhost:3001/api/tools/call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: selectedTool, arguments: params }),
+      });
+
+      if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+      const data = await response.json();
+
+      if (data.error) throw new Error(data.error);
+
+      const toolOutput = data?.content?.[0]?.text;
+
+      try {
+        setPlaygroundOutput(JSON.parse(toolOutput));
+      } catch {
+        setPlaygroundOutput(toolOutput || "Success.");
+      }
+
+      addLog(`🟢 Raw tool '${selectedTool}' executed successfully.`);
+    } catch (err) {
+      setPlaygroundOutput({ error: err.message });
+      addLog(`❌ Raw tool '${selectedTool}' failed: ${err.message}`);
+    } finally {
+      setPlaygroundLoading(false);
+    }
+  };
+
   const handleApproveExclusion = (recId) => {
     setApprovedKeywords([...approvedKeywords, recId]);
     addLog(`Approved keyword exclusion group: '${recId}'`);
@@ -245,7 +306,7 @@ export default function McpHub() {
       </div>
 
       {/* Unified Dashboard Tab Rules */}
-      <div className="border-b border-slate-200 flex items-center gap-6 text-xs font-bold text-slate-400 select-none">
+      <div className="border-b border-slate-200 flex flex-wrap items-center gap-6 text-xs font-bold text-slate-400 select-none">
         <button
           onClick={() => setActiveHubTab("traffic_audit")}
           className={`py-3.5 border-b-2 px-1 transition ${
@@ -275,6 +336,16 @@ export default function McpHub() {
           }`}
         >
           ✍️ Content SEO Copywriter
+        </button>
+        <button
+          onClick={() => setActiveHubTab("playground")}
+          className={`py-3.5 border-b-2 px-1 transition ${
+            activeHubTab === "playground"
+              ? "border-blue-600 text-blue-600 font-black"
+              : "hover:text-slate-700"
+          }`}
+        >
+          💻 Raw Tool Playground
         </button>
         <button
           onClick={() => setActiveHubTab("diagnostics")}
@@ -693,6 +764,209 @@ export default function McpHub() {
           </div>
         )}
 
+        {/* Tab 3: Restored playground console */}
+        {activeHubTab === "playground" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fadeIn">
+            <div className="lg:col-span-1 space-y-6">
+              {/* Server Diagnostics target connections list */}
+              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-100 pb-3">
+                  <Network className="h-4 w-4 text-slate-400" /> Active
+                  Configurations
+                </h3>
+                <div className="space-y-3 text-xs text-slate-600">
+                  <div className="flex justify-between">
+                    <span className="font-medium text-slate-400">
+                      Target Bridge
+                    </span>
+                    <span className="font-mono bg-slate-100 px-1.5 py-0.5 rounded font-bold text-slate-700">
+                      http://localhost:3001
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="font-medium text-slate-400">
+                      Direct Route
+                    </span>
+                    <span className="font-mono text-slate-700">
+                      /api/tools/call
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Declared Server Tools */}
+              <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-100 pb-3">
+                  <BookOpen className="h-4 w-4 text-slate-400" /> Declared
+                  System Tools
+                </h3>
+                <div className="space-y-4 text-xs leading-relaxed text-slate-500">
+                  <div className="border border-slate-150 p-3 rounded-lg bg-slate-50/50">
+                    <strong className="text-slate-800 font-bold block mb-0.5">
+                      run_bigquery_query
+                    </strong>
+                    Runs custom SQL analysis directly against your Google Cloud
+                    BigQuery marketing database.
+                  </div>
+                  <div className="border border-slate-150 p-3 rounded-lg bg-slate-50/50">
+                    <strong className="text-slate-800 font-bold block mb-0.5">
+                      query_firestore
+                    </strong>
+                    Queries optimizations settings, pixel heatmap
+                    configurations, or audit queues from Firestore.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Executor Playground Console card */}
+            <div className="lg:col-span-2 space-y-6">
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-6">
+                <div className="border-b border-slate-100 pb-4">
+                  <h2 className="text-base font-bold text-slate-950">
+                    MCP Tool Execution Playground
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Manually test background APIs, custom scripts, and raw SQL
+                    queries
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs font-semibold">
+                  <div className="space-y-1.5">
+                    <span className="text-slate-400 font-bold uppercase tracking-wide">
+                      Select MCP Tool
+                    </span>
+                    <select
+                      value={selectedTool}
+                      onChange={(e) => setSelectedTool(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs cursor-pointer font-bold text-slate-700"
+                    >
+                      <option value="run_bigquery_query">
+                        run_bigquery_query (BigQuery SQL Console)
+                      </option>
+                      <option value="query_firestore">
+                        query_firestore (Firestore Collection Fetch)
+                      </option>
+                      <option value="google_search">
+                        google_search (Week 2 Live)
+                      </option>
+                      <option value="scrape_competitor">
+                        scrape_competitor (Week 3 Live)
+                      </option>
+                    </select>
+                  </div>
+
+                  {selectedTool === "google_search" && (
+                    <div className="space-y-1.5">
+                      <span className="text-slate-400 font-bold uppercase tracking-wide block">
+                        Results Count
+                      </span>
+                      <input
+                        type="range"
+                        min="1"
+                        max="10"
+                        value={numResults}
+                        onChange={(e) => setNumResults(e.target.value)}
+                        className="w-full h-1 bg-slate-250 rounded-lg appearance-none cursor-pointer mt-3"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* BigQuery Input */}
+                {selectedTool === "run_bigquery_query" && (
+                  <div className="space-y-1.5 text-xs font-semibold">
+                    <span className="text-slate-400 font-bold uppercase tracking-wide">
+                      SQL Query Input Console
+                    </span>
+                    <textarea
+                      rows={5}
+                      value={sqlQuery}
+                      onChange={(e) => setSqlQuery(e.target.value)}
+                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg font-mono leading-relaxed text-xs focus:bg-white"
+                    />
+                  </div>
+                )}
+
+                {/* Firestore Input */}
+                {selectedTool === "query_firestore" && (
+                  <div className="space-y-1.5 text-xs font-semibold">
+                    <span className="text-slate-400 font-bold uppercase tracking-wide">
+                      Select Firestore Collection
+                    </span>
+                    <select
+                      value={firestoreCollection}
+                      onChange={(e) => setFirestoreCollection(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer text-xs font-bold text-slate-700"
+                    >
+                      <option value="optimizations">optimizations</option>
+                      <option value="heatmaps">heatmaps</option>
+                      <option value="settings">settings</option>
+                    </select>
+                  </div>
+                )}
+
+                {/* Scraper Input */}
+                {selectedTool === "scrape_competitor" && (
+                  <div className="space-y-1.5 text-xs font-semibold">
+                    <span className="text-slate-400 font-bold uppercase tracking-wide">
+                      Scraper Target Link
+                    </span>
+                    <input
+                      type="text"
+                      value={scrapeUrl}
+                      onChange={(e) => setScrapeUrl(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                    />
+                  </div>
+                )}
+
+                {/* Search Input */}
+                {selectedTool === "google_search" && (
+                  <div className="space-y-1.5 text-xs font-semibold">
+                    <span className="text-slate-400 font-bold uppercase tracking-wide">
+                      Search Term Query
+                    </span>
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                    />
+                  </div>
+                )}
+
+                <button
+                  onClick={handleRunPlaygroundTool}
+                  disabled={playgroundLoading || mcpStatus !== "connected"}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-lg text-xs shadow-sm transition flex items-center justify-center gap-1.5 disabled:opacity-50"
+                >
+                  <Play className="h-3.5 w-3.5" />{" "}
+                  {playgroundLoading ? "Executing Run..." : "Execute Tool Run"}
+                </button>
+
+                <div className="space-y-2 border-t border-slate-100 pt-5">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+                    <Terminal className="h-4 w-4 text-slate-400" /> Raw Response
+                    Console
+                  </span>
+                  {playgroundOutput ? (
+                    <pre className="p-4 bg-slate-900 text-slate-100 rounded-xl font-mono text-xs overflow-x-auto max-h-80 leading-relaxed">
+                      {JSON.stringify(playgroundOutput, null, 2)}
+                    </pre>
+                  ) : (
+                    <div className="p-12 text-center bg-slate-50 border border-dashed border-slate-200 rounded-xl text-xs font-medium text-slate-400">
+                      Configure parameters and click 'Execute Tool Run' to
+                      execute live Google Cloud SQL queries or API handshakes
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Tab 4: Diagnostics Node logs console */}
         {activeHubTab === "diagnostics" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -725,7 +999,7 @@ export default function McpHub() {
                     <span className="font-medium text-slate-400">
                       Status Check
                     </span>
-                    <span className="font-mono text-slate-700">
+                    <span className="font-mono text-slate-750">
                       /api/status
                     </span>
                   </div>
@@ -733,7 +1007,7 @@ export default function McpHub() {
                     <span className="font-medium text-slate-400">
                       Tool Endpoint
                     </span>
-                    <span className="font-mono text-slate-700">
+                    <span className="font-mono text-slate-750">
                       /api/tools/call
                     </span>
                   </div>
@@ -747,122 +1021,27 @@ export default function McpHub() {
                   Tools
                 </h3>
 
-                <div className="space-y-4">
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        ping_diagnostics
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      Pings the local server over standard HTTP direct JSON
-                      requests to verify status.
-                    </p>
+                <div className="space-y-4 text-xs leading-normal text-slate-500">
+                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50">
+                    <strong className="text-slate-800 font-bold block mb-0.5">
+                      ping_diagnostics
+                    </strong>
+                    Pings the local server over standard HTTP direct JSON
+                    requests to verify status.
                   </div>
-
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        google_search
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      Hits live Google Search via SerpAPI to locate outranking
-                      competitor sign sites.
-                    </p>
+                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50">
+                    <strong className="text-slate-800 font-bold block mb-0.5">
+                      google_search
+                    </strong>
+                    Hits live Google Search via SerpAPI to locate outranking
+                    competitor sign sites.
                   </div>
-
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        scrape_competitor
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      Scrapes and parses titles, H1 tags, word counts, and
-                      JSON-LD schema metadata.
-                    </p>
-                  </div>
-
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        run_bigquery_query
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      Executes custom SQL analysis against live Google Cloud
-                      BigQuery warehouses or sandboxes.
-                    </p>
-                  </div>
-
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        query_firestore
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      Fetches active document settings, optimization lists, and
-                      heatmaps from Cloud Firestore.
-                    </p>
-                  </div>
-
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        audit_negative_keywords
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      Audits live search query statistics to flag budget leaks
-                      and shield core products.
-                    </p>
-                  </div>
-
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        cross_reference_catalog_pricing
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      Scrapes a competitor storefront, parses their price, and
-                      maps it against your GMC catalog.
-                    </p>
-                  </div>
-
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        autonomous_pricing_audit
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      End-to-End Pricing Agent: searches Google, scrapes
-                      competitors, and flags direct undercuts.
-                    </p>
-                  </div>
-
-                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50 space-y-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
-                      <strong className="text-xs text-slate-800 font-bold">
-                        generate_seo_blog_content
-                      </strong>
-                    </div>
-                    <p className="text-[11px] text-slate-500 leading-normal">
-                      Autonomous Copywriting: scans competitor densities,
-                      prompts Gemini, and drafts long-form SEO copy.
-                    </p>
+                  <div className="border border-slate-150 rounded-lg p-3 bg-slate-50/50">
+                    <strong className="text-slate-800 font-bold block mb-0.5">
+                      scrape_competitor
+                    </strong>
+                    Scrapes and parses titles, H1 tags, word counts, and JSON-LD
+                    schema metadata.
                   </div>
                 </div>
               </div>
@@ -870,7 +1049,7 @@ export default function McpHub() {
 
             {/* Right Column logs */}
             <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 h-fit">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1.5 border-b border-slate-100 pb-3">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-100 pb-3">
                 <Terminal className="h-4 w-4 text-slate-400" /> Client
                 Diagnostic Logs
               </h3>
