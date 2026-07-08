@@ -1028,6 +1028,9 @@ Provide your response in a structured JSON packet with these EXACT fields:
               ],
             },
           ],
+          generationConfig: {
+            responseMimeType: "application/json",
+          },
         };
 
         console.error("Calling Gemini 2.5 Flash Reasoning Engine...");
