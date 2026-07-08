@@ -947,10 +947,45 @@ export default function McpHub() {
                 </button>
 
                 <div className="space-y-2 border-t border-slate-100 pt-5">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
-                    <Terminal className="h-4 w-4 text-slate-400" /> Raw Response
-                    Console
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+                      <Terminal className="h-4 w-4 text-slate-400" /> Raw
+                      Response Console
+                    </span>
+                    {playgroundOutput && (
+                      <button
+                        onClick={() => {
+                          const textToCopy =
+                            typeof playgroundOutput === "object"
+                              ? JSON.stringify(playgroundOutput, null, 2)
+                              : playgroundOutput;
+                          navigator.clipboard.writeText(textToCopy);
+                          alert("Response copied to clipboard!");
+                        }}
+                        className="text-[11px] font-extrabold text-blue-600 hover:text-blue-800 flex items-center gap-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded px-2 py-1 transition"
+                      >
+                        <svg
+                          className="h-3 w-3 inline shrink-0"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="2.5"
+                          stroke="currentColor"
+                        >
+                          <rect
+                            width="14"
+                            height="14"
+                            x="8"
+                            y="8"
+                            rx="2"
+                            ry="2"
+                          />
+                          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                        </svg>
+                        Copy
+                      </button>
+                    )}
+                  </div>
                   {playgroundOutput ? (
                     <pre className="p-4 bg-slate-900 text-slate-100 rounded-xl font-mono text-xs overflow-x-auto max-h-80 leading-relaxed">
                       {JSON.stringify(playgroundOutput, null, 2)}
