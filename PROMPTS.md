@@ -1,6 +1,6 @@
 # 🧠 AlphabetSEM Elite — Prompt Engineering Registry
 
-This document registers the clean, structured prompts and output schemas powering the **Gemini 3.5 Flash** engine across all active tools in **AlphabetSEM Elite**.
+This document registers the clean, structured prompts, matching criteria, and output schemas powering the **Gemini 3.5 Flash** engine across all active tools and exclusions in **AlphabetSEM Elite**.
 
 To eliminate conversational fluff and guarantee deterministic JSON output, all tools are configured with a strict `responseMimeType: "application/json"` payload setting.
 
@@ -56,7 +56,58 @@ Return your response in a strict, structured JSON object with this exact format:
 
 ---
 
-## 🏷️ 2. Autonomous Competitive Price-Matcher
+## 🛡️ 2. B2C Event Decor Exclusion Shield (The Party Filter)
+
+*   **Model**: Gemini 3.5 Flash / Ad Operations Rule
+*   **Target Campaign**: `CL00 | Marquee Letters`
+*   **Objective**: Block casual consumers looking for light-up wedding, birthday, and graduation letter decorations (AOV $6–$50 at Walmart/Amazon), preserving budget for commercial changeable rigid plastic readerboard letters.
+
+### 📋 Hashing Exclusions Dictionary (Phrase Match Negatives):
+```text
+"led", "light up", "lighted", "lights", "bulb", "bulbs", "battery", "battery operated", "neon", 
+"wedding", "birthday", "birthdays", "party", "parties", "event", "events", "grad", "graduation", 
+"rental", "rentals", "props", "decor", "decoration", "decorations", "giant", "freestanding", 
+"wood", "wooden", "cardboard", "heidi swapp", "efavormart", "alpha lit", "amazon", "target", "walmart"
+```
+
+---
+
+## 🏗️ 3. Channel Letters & Giant Sizes Exclusion Shield (The Fabrication Filter)
+
+*   **Model**: Gemini 3.5 Flash / Ad Operations Rule
+*   **Target Campaign**: `CL00` (Marquee) and `VL00` (Vinyl Lettering)
+*   **Objective**: Exclude premium, non-matching sign fabrications like backlit/illuminated channel letters (which require custom metal shop wiring) and giant freestanding party/event rental structures (usually 2ft to 5ft tall).
+*   **Safety Rule**: DO NOT negate building lettering terms, as Alphabet Signs sells B2B dimensional building sign letters.
+
+### 📋 Hashing Exclusions Dictionary (Phrase Match Negatives):
+```text
+"channel letters", "channel letter", "backlit channel", "reverse lit", "illuminated channel", "push through acrylic",
+"2ft", "2 feet", "2 foot", "3ft", "3 feet", "3 foot", "36 inch", "4ft", "4 feet", "4 foot", "48 inch", "5ft", "5 feet", "5 foot", "60 inch",
+"mr and mrs", "oh baby", "joy", "split flap", "asl alphabet", "rental", "rentals"
+```
+
+---
+
+## 🎨 4. Building Letters Ad Group Sculpting Engine (The Category Router)
+
+*   **Model**: Gemini 3.5 Flash / Ad Operations Rule
+*   **Target Campaign**: `BL00 Building Letters | Search`
+*   **Objective**: Surgically negate material keywords across your ad groups to force Google's keyword-matching algorithm to display the ad copy that exactly matches the customer's material intent.
+
+### 📋 Ad Group Sculpting Negatives Matrix:
+
+1.  **Ad Group: `Metal Letters`**
+    *   *Ad Group Negatives:* `"plastic"`, `"pvc"`, `"sintra"`, `"acrylic"`, `"plexiglass"`
+2.  **Ad Group: `Plastic Dimensional Letters`**
+    *   *Ad Group Negatives:* `"metal"`, `"brass"`, `"bronze"`, `"copper"`, `"steel"`, `"acrylic"`, `"plexiglass"`
+3.  **Ad Group: `Acrylic Letters`**
+    *   *Ad Group Negatives:* `"metal"`, `"brass"`, `"bronze"`, `"copper"`, `"steel"`, `"plastic"`, `"pvc"`, `"sintra"`
+4.  **Ad Group: `Outdoor Building Letters` (Generic)**
+    *   *Ad Group Negatives:* `"metal"`, `"brass"`, `"bronze"`, `"steel"`, `"plastic"`, `"pvc"`, `"acrylic"`, `"plexiglass"`
+
+---
+
+## 🏷️ 5. Autonomous Competitive Price-Matcher
 
 *   **Model**: Gemini 3.5 Flash
 *   **Trigger**: Tool `cross_reference_catalog_pricing` / `autonomous_pricing_audit`.
@@ -106,7 +157,7 @@ Return a strict, structured JSON response in this exact format:
 
 ---
 
-## ✍️ 3. Autonomous SEO Copywriting Agent
+## ✍️ 6. Autonomous SEO Copywriting Agent
 
 *   **Model**: Gemini 3.5 Flash
 *   **Trigger**: Tool `generate_seo_blog_content`.
@@ -144,7 +195,7 @@ Return your response in a strict, structured JSON packet with this exact format:
 
 ---
 
-## ⚙️ 4. Dynamic SEO Metadata & Schema Generator
+## ⚙️ 7. Dynamic SEO Metadata & Schema Generator
 
 *   **Model**: Gemini 3.5 Flash
 *   **Trigger**: Frontend SEO Hub interaction.

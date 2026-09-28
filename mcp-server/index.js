@@ -1302,6 +1302,64 @@ app.get("/api/status", (req, res) => {
   res.json({ status: "online", version: "1.3.0" });
 });
 
+app.get("/api/dashboard/stats", async (req, res) => {
+  const keyFilename = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  
+  if (keyFilename && keyFilename !== "your_service_account_path.json") {
+    try {
+      const bq = new BigQuery({ keyFilename });
+      const sqlQuery = `
+        SELECT 
+          SUM(s.metrics_clicks) as clicks,
+          ROUND(SUM(s.metrics_cost_micros) / 1000000, 2) as cost,
+          SUM(s.metrics_conversions) as conversions,
+          ROUND(SUM(s.metrics_conversions_value), 2) as value,
+          ROUND(SUM(s.metrics_conversions_value) / NULLIF(SUM(s.metrics_cost_micros) / 1000000, 0), 2) as roas
+        FROM \`google_ads.p_ads_HourlyAccountStats_3166231030\` s
+        WHERE DATE(s._PARTITIONTIME) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+      `;
+      const [job] = await bq.createQueryJob({ query: sqlQuery });
+      const [rows] = await job.getQueryResults();
+      
+      if (rows.length > 0 && rows[0].cost !== null) {
+        const stats = rows[0];
+        const costVal = parseFloat(stats.cost) || 0;
+        const convs = parseFloat(stats.conversions) || 0;
+        const avgCpa = convs > 0 ? (costVal / convs) : 0;
+        
+        // Calculate dynamic previous 30 days dates
+        const endDateStr = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - 30);
+        const startDateStr = startDate.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+        return res.json({
+          status: "success",
+          dateRange: `${startDateStr} – ${endDateStr}`,
+          spend: `$${costVal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          conversionValue: `$${(parseFloat(stats.value) || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+          roas: (parseFloat(stats.roas) || 0).toFixed(2),
+          conversions: convs.toFixed(2),
+          avgCpa: `$${avgCpa.toFixed(2)}`
+        });
+      }
+    } catch (err) {
+      console.error("Live dashboard stats fetch failed:", err.message);
+    }
+  }
+
+  // Sandbox fallback
+  res.json({
+    status: "sandbox",
+    dateRange: "May 13 – Jun 11",
+    spend: "$29,856.00",
+    conversionValue: "$57,324.44",
+    roas: "1.92",
+    conversions: "430.25",
+    avgCpa: "$69.39"
+  });
+});
+
 app.post("/api/tools/call", async (req, res) => {
   const { name, arguments: args } = req.body;
   try {

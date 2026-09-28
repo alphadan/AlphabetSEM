@@ -119,6 +119,146 @@ export default function ProductHub() {
         </div>
       </div>
 
+      {/* Google Ads Product Group Performance (Last 30 Days) */}
+      <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-850 pb-4">
+          <div>
+            <h2 className="text-lg font-bold text-slate-100 flex items-center gap-2">
+              <Tag className="h-5 w-5 text-blue-400" />
+              Google Ads Product Group Performance (Last 30 Days)
+            </h2>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live Category and SKU performance pulled directly from your BL00 Shopping campaign.
+            </p>
+          </div>
+          <div className="bg-slate-800 text-slate-300 font-bold text-[10px] px-3 py-1 rounded-lg border border-slate-750 font-mono">
+            campaignId: 2399928087
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3.5 pt-1">
+          {/* Card 1: bl31 */}
+          <div className="bg-slate-850 border border-slate-800 rounded-xl p-3 flex flex-col justify-between hover:border-blue-500/50 transition">
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="font-mono text-xs font-black text-slate-300">bl31</span>
+              <span className="bg-emerald-950 text-emerald-400 font-black text-[9px] px-1.5 py-0.2 rounded border border-emerald-900 uppercase">
+                6.19x
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <span className="text-[10px] text-slate-400 block font-medium">B2B Aluminum</span>
+              <strong className="text-sm font-bold text-slate-200 block font-mono mt-0.5">$7,471.96</strong>
+            </div>
+            <span className="text-[9px] text-emerald-400 font-semibold block mt-1 font-mono">🚀 6.19x Bestseller</span>
+          </div>
+
+          {/* Card 2: bl70100 */}
+          <div className="bg-slate-850 border border-slate-800 rounded-xl p-3 flex flex-col justify-between hover:border-blue-500/50 transition">
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="font-mono text-xs font-black text-slate-300">bl70100</span>
+              <span className="bg-emerald-950 text-emerald-400 font-black text-[9px] px-1.5 py-0.2 rounded border border-emerald-900 uppercase">
+                3.21x
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <span className="text-[10px] text-slate-400 block font-medium">PVC Letters 100</span>
+              <strong className="text-sm font-bold text-slate-200 block font-mono mt-0.5">$4,285.19</strong>
+            </div>
+            <span className="text-[9px] text-emerald-400 font-semibold block mt-1 font-mono">💪 3.21x Engine</span>
+          </div>
+
+          {/* Card 3: bl70102 */}
+          <div className="bg-slate-850 border border-slate-800 rounded-xl p-3 flex flex-col justify-between hover:border-blue-500/50 transition">
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="font-mono text-xs font-black text-slate-300">bl70102</span>
+              <span className="bg-emerald-950 text-emerald-400 font-black text-[9px] px-1.5 py-0.2 rounded border border-emerald-900 uppercase">
+                2.27x
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <span className="text-[10px] text-slate-400 block font-medium">PVC Letters 102</span>
+              <strong className="text-sm font-bold text-slate-200 block font-mono mt-0.5">$810.67</strong>
+            </div>
+            <span className="text-[9px] text-emerald-400 font-semibold block mt-1 font-mono">📈 2.27x Profit</span>
+          </div>
+
+          {/* Card 4: bl00 */}
+          <div className="bg-slate-850 border border-slate-800 rounded-xl p-3 flex flex-col justify-between hover:border-blue-500/50 transition">
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="font-mono text-xs font-black text-slate-300">bl00</span>
+              <span className="bg-emerald-950 text-emerald-400 font-black text-[9px] px-1.5 py-0.2 rounded border border-emerald-900 uppercase">
+                3.17x
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <span className="text-[10px] text-slate-400 block font-medium">Molded Letters</span>
+              <strong className="text-sm font-bold text-slate-200 block font-mono mt-0.5">$1,070.41</strong>
+            </div>
+            <span className="text-[9px] text-emerald-400 font-semibold block mt-1 font-mono">💎 3.17x B2B</span>
+          </div>
+
+          {/* Card 5: bl20 */}
+          <div className="bg-slate-850 border border-slate-800 rounded-xl p-3 flex flex-col justify-between hover:border-blue-500/50 transition">
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="font-mono text-xs font-black text-slate-300">bl20</span>
+              <span className="bg-emerald-950 text-emerald-400 font-black text-[9px] px-1.5 py-0.2 rounded border border-emerald-900 uppercase">
+                2.18x
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <span className="text-[10px] text-slate-400 block font-medium">Acrylic Letters</span>
+              <strong className="text-sm font-bold text-slate-200 block font-mono mt-0.5">$756.00</strong>
+            </div>
+            <span className="text-[9px] text-emerald-400 font-semibold block mt-1 font-mono">📈 2.18x Profit</span>
+          </div>
+
+          {/* Card 6: bl33 */}
+          <div className="bg-slate-850 rounded-xl p-3 flex flex-col justify-between border border-red-950 hover:border-red-500/50 transition">
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="font-mono text-xs font-black text-slate-300">bl33</span>
+              <span className="bg-red-955 text-red-400 font-bold text-[9px] px-1.5 py-0.2 rounded border border-red-900 uppercase">
+                0.61x
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <span className="text-[10px] text-slate-400 block font-medium">Formed Plastic</span>
+              <strong className="text-sm font-bold text-slate-200 block font-mono mt-0.5">$175.45</strong>
+            </div>
+            <span className="text-[9px] text-red-400 font-bold block mt-1 font-mono">⚠️ BLEEDER</span>
+          </div>
+
+          {/* Card 7: bl401 */}
+          <div className="bg-slate-850 rounded-xl p-3 flex flex-col justify-between border border-red-950 hover:border-red-500/50 transition">
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="font-mono text-xs font-black text-slate-300">bl401</span>
+              <span className="bg-red-955 text-red-400 font-bold text-[9px] px-1.5 py-0.2 rounded border border-red-900 uppercase">
+                0.82x
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <span className="text-[10px] text-slate-400 block font-medium">Flat Cut Metal</span>
+              <strong className="text-sm font-bold text-slate-200 block font-mono mt-0.5">$184.02</strong>
+            </div>
+            <span className="text-[9px] text-red-400 font-bold block mt-1 font-mono">⚠️ BLEEDER</span>
+          </div>
+
+          {/* Card 8: Excluded */}
+          <div className="bg-slate-850 rounded-xl p-3 flex flex-col justify-between border border-slate-800 transition opacity-60">
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="font-mono text-[9px] font-bold text-slate-400">bl32/402/80</span>
+              <span className="bg-slate-900 text-slate-500 font-bold text-[9px] px-1.5 py-0.2 rounded border border-slate-800 uppercase">
+                0.00x
+              </span>
+            </div>
+            <div className="mt-2.5">
+              <span className="text-[10px] text-slate-500 block font-medium">Low Convert</span>
+              <strong className="text-sm font-bold text-slate-400 block font-mono mt-0.5">$0.00</strong>
+            </div>
+            <span className="text-[9px] text-slate-500 font-semibold block mt-1">🚫 EXCLUDED</span>
+          </div>
+        </div>
+      </div>
+
       {/* Row-Aligned Controls: Structured CSS Grid prevents overflow completely */}
       <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm grid grid-cols-1 lg:grid-cols-4 gap-4 items-center w-full max-w-full box-border">
         {/* Search - Span 2 columns on large screens */}

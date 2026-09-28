@@ -1,72 +1,13 @@
 {
-  "executiveSummary": "The 'Alphabet Signs' Google Ads account is experiencing significant budget leakage, primarily driven by PMax campaigns that are broadly matching to highly irrelevant and low-intent search queries. Key areas of leakage include extremely generic alphabet-related searches (e.g., 'a', 'b', 'abc signs'), competitor brand terms, and queries for products or accessories outside of Alphabet Signs' core offerings (e.g., 'boat numbers', 'felt letter boards', 'marquee letter storage box'). These non-converting terms are collectively consuming an estimated $477.21/mo in ad spend, which could be reallocated to higher-performing, commercially-driven searches for high-end dimensional letters, marquee letters, church sign letters, and commercial vehicle graphics.",
-  "totalEstimatedSavings": "$477.21/mo",
+  "executiveSummary": "The Google Ads account for 'Alphabet Signs' is experiencing significant budget leakage, primarily driven by broad matching behavior within Performance Max (PMax) campaigns. The identified leakage stems from several key areas: irrelevant searches for competitor brands, generic alphabet-related terms (likely for education or consumer goods), specific magnetic vehicle graphic products (which may not align with 'Alphabet Signs' core 'high-end' offerings), informational queries, and low-end letterboard/bulletin board products. By implementing strategic negative keyword exclusions, we can recapture over $760/month in wasted ad spend and redirect budget towards high-intent, relevant traffic. It's crucial to distinguish these leakages from high-value queries for products like Gemini letters or Wagner Zip Change letters, which, despite being brand-specific, indicate a strong commercial intent for product types 'Alphabet Signs' sells.",
+  "totalEstimatedSavings": "$760.69/mo",
   "recommendations": [
     {
-      "id": "block-generic-alphabet-spam",
-      "title": "Block Generic 'ABC' & Alphabet Searches",
+      "id": "neg-competitor-brands",
+      "title": "Block Direct Competitor Brand Searches",
       "type": "Negative Keywords",
       "impact": "high",
-      "desc": "PMax campaigns are broadly interpreting 'alphabet' and 'abc' keywords, leading to wasted ad spend on extremely generic and non-commercial search terms. These queries (e.g., 'a', 'b', 'abcdefghijklmnopqrstuvwxyz', 'abc signs', 'alphabet letters com') indicate no commercial intent for high-end sign letters and are a clear drain on the budget.",
-      "difficulty": "Easy (2 mins)",
-      "costSavings": "Est. $222.72/mo",
-      "negativeKeywordsToApply": [
-        "abc",
-        "alphabet",
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z",
-        "abcdefghijklmnopqrstuvwxyz",
-        "letters com"
-      ]
-    },
-    {
-      "id": "exclude-irrelevant-products-low-intent",
-      "title": "Exclude Irrelevant Product Types & Low-Intent Searches",
-      "type": "Negative Keywords",
-      "impact": "high",
-      "desc": "Budget is being wasted on searches for products not sold by Alphabet Signs (e.g., 'boat numbers', residential 'address numbers') or low-value, non-commercial items (e.g., 'felt letter board', 'marquee letter storage box', general 'bulletin boards'). These queries do not align with the sale of high-end dimensional letters, marquee letters, church sign letters, or commercial vehicle graphics.",
-      "difficulty": "Easy (2 mins)",
-      "costSavings": "Est. $150.49/mo",
-      "negativeKeywordsToApply": [
-        "boat numbers",
-        "address numbers",
-        "felt letter board",
-        "letterboard",
-        "bulletin board",
-        "storage box",
-        "wall lettering"
-      ]
-    },
-    {
-      "id": "block-competitor-brands",
-      "title": "Block Specific Competitor Brands",
-      "type": "Negative Keywords",
-      "impact": "medium",
-      "desc": "Queries for specific competitor brand names like 'signoutfitters', 'national readerboard supply', 'ez signs online', and 'alpha wolf decals llc' are consuming budget without conversions. Unless a specific competitor bidding strategy is in place, these terms represent leakage, diverting potential customers to competitor offerings.",
+      "desc": "PMax campaigns are matching highly specific competitor brand names, diverting budget to users likely looking for alternatives or specific brands 'Alphabet Signs' does not directly offer or resell. Blocking these terms will prevent wasted spend on users with established brand preferences.",
       "difficulty": "Easy (2 mins)",
       "costSavings": "Est. $104.00/mo",
       "negativeKeywordsToApply": [
@@ -75,284 +16,280 @@
         "ez signs online",
         "alpha wolf decals llc"
       ]
+    },
+    {
+      "id": "neg-generic-alphabet-terms",
+      "title": "Exclude Irrelevant Alphabet/Generic Searches",
+      "type": "Negative Keywords",
+      "impact": "high",
+      "desc": "A substantial portion of leakage comes from extremely generic or 'alphabet'-related queries that indicate intent for educational materials, children's products, or simply broad character searches, rather than commercial sign letters. These terms are too broad for a high-end sign business.",
+      "difficulty": "Easy (2 mins)",
+      "costSavings": "Est. $222.72/mo",
+      "negativeKeywordsToApply": [
+        "abc",
+        "a",
+        "b",
+        "alphabet",
+        "abcdefghijklmnopqrstuvwxyz",
+        "abc sign company"
+      ]
+    },
+    {
+      "id": "neg-magnetic-dot-products",
+      "title": "Exclude Magnetic DOT Vehicle Graphics (If Not Core Product)",
+      "type": "Negative Keywords",
+      "impact": "high",
+      "desc": "Queries explicitly mentioning 'magnetic' for DOT numbers and truck signs suggest a search for temporary, potentially lower-end vehicle graphics. If 'Alphabet Signs' primarily sells permanent vinyl decals or dimensional letters for commercial vehicles, these searches represent leakage. This recommendation assumes magnetic signs are not a core or high-end offering for vehicle graphics.",
+      "difficulty": "Easy (2 mins)",
+      "costSavings": "Est. $264.61/mo",
+      "negativeKeywordsToApply": [
+        "magnetic",
+        "magnet",
+        "magnets"
+      ]
+    },
+    {
+      "id": "neg-informational-dot-queries",
+      "title": "Block Informational DOT-Related Searches",
+      "type": "Negative Keywords",
+      "impact": "medium",
+      "desc": "Some users are searching for information about DOT number placement or labeling requirements rather than a direct purchase. While related, these are not commercial intent queries for buying vehicle graphics.",
+      "difficulty": "Easy (2 mins)",
+      "costSavings": "Est. $29.09/mo",
+      "negativeKeywordsToApply": [
+        "placement",
+        "requirements"
+      ]
+    },
+    {
+      "id": "neg-low-end-letterboards-bulletins",
+      "title": "Exclude Low-End Letterboards & Bulletin Boards",
+      "type": "Negative Keywords",
+      "impact": "high",
+      "desc": "Terms like 'letterboard' and 'bulletin board' often refer to consumer-grade, felt, or changeable letter boards that are distinct from 'Alphabet Signs' high-end dimensional and marquee letter offerings. These searches attract users looking for different product types or lower price points.",
+      "difficulty": "Easy (2 mins)",
+      "costSavings": "Est. $105.56/mo",
+      "negativeKeywordsToApply": [
+        "letterboard",
+        "bulletin board",
+        "felt board"
+      ]
+    },
+    {
+      "id": "neg-irrelevant-product-types",
+      "title": "Block Unrelated Product Categories and Accessories",
+      "type": "Negative Keywords",
+      "impact": "medium",
+      "desc": "Queries for '12 address numbers' likely target residential property numbers, not commercial building signage. 'Boat numbers' fall outside the defined core product categories of 'Alphabet Signs' (high-end dimensional letters, marquee letters, church sign letters, and commercial vehicle graphics). 'Marquee letter storage box' is an accessory, not the primary product.",
+      "difficulty": "Easy (2 mins)",
+      "costSavings": "Est. $34.71/mo",
+      "negativeKeywordsToApply": [
+        "address numbers",
+        "boat numbers",
+        "storage box"
+      ]
     }
   ],
   "falsePositivesSafety": [
     {
       "term": "readerboard letters",
-      "reason": "This query is high-intent for changeable copy letters, a core product line ('marquee letters')."
+      "reason": "'Alphabet Signs' sells marquee letters, and 'readerboard letters' are synonymous, indicating strong commercial intent for a core product."
     },
     {
       "term": "gemini letters",
-      "reason": "Gemini is a well-known manufacturer of high-end dimensional letters, which Alphabet Signs sells. This is a high-intent search for a specific product type."
+      "reason": "Gemini is a well-known manufacturer of dimensional letters. This term indicates high commercial intent for a specific type of high-end dimensional letter, which is a core product."
     },
     {
       "term": "outdoor sign letters",
-      "reason": "Directly refers to a core product: 'letters for signs'."
+      "reason": "This is a direct, high-intent query for dimensional letters or letters for outdoor signage, a core offering of 'Alphabet Signs'."
     },
     {
       "term": "letters metal",
-      "reason": "High-intent for metal dimensional letters, a core product."
+      "reason": "Indicates commercial intent for metal dimensional letters, a core product category."
     },
     {
       "term": "sign letters",
-      "reason": "Directly refers to a core product: 'letters for signs'."
+      "reason": "A general but high-intent query for letters used on signs, aligning with 'Alphabet Signs' core offerings."
     },
     {
       "term": "building letters",
-      "reason": "High-intent query for dimensional letters used on buildings, a core product."
-    },
-    {
-      "term": "magnetic dot signs",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
-    },
-    {
-      "term": "magnetic dot numbers",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
-    },
-    {
-      "term": "readerboard letters",
-      "reason": "High-intent for changeable copy letters, a core product line ('marquee letters')."
-    },
-    {
-      "term": "magnetic dot placards",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
-    },
-    {
-      "term": "acrylic cut letters",
-      "reason": "Specific type of high-end dimensional letter, a core product."
-    },
-    {
-      "term": "magnetic truck signs",
-      "reason": "Directly relevant to 'commercial vehicle graphics'."
-    },
-    {
-      "term": "dot magnetic signs",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
-    },
-    {
-      "term": "usdot magnets",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "Direct commercial intent for dimensional letters used on buildings, a core product."
     },
     {
       "term": "usdot number decals",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
-    },
-    {
-      "term": "usdot stickers",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "These are a specific type of commercial vehicle graphics, explicitly sold by 'Alphabet Signs'."
     },
     {
       "term": "marquee letters",
-      "reason": "A primary product offered by Alphabet Signs."
+      "reason": "A core product offering, indicating high commercial intent."
+    },
+    {
+      "term": "usdot stickers",
+      "reason": "Similar to decals, these are commercial vehicle graphics and a core offering."
     },
     {
       "term": "truck dot stickers",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "Specific to commercial vehicle graphics, a core product."
     },
     {
       "term": "dot decals",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "Commercial vehicle graphics, a core product."
     },
     {
       "term": "exterior building letters",
-      "reason": "High-intent query for dimensional letters for buildings, a core product."
+      "reason": "High-intent query for dimensional letters used on building exteriors, a core product."
     },
     {
       "term": "10 inch marquee letters",
-      "reason": "Specific size of a primary product, 'marquee letters'."
+      "reason": "Specific size query for a core product, indicating high commercial intent."
     },
     {
       "term": "marquee sign numbers",
-      "reason": "Specific product related to 'marquee letters'."
+      "reason": "Direct commercial intent for numbers used on marquee signs, a core product."
     },
     {
       "term": "6 inch zip letters",
-      "reason": "Refers to changeable copy letters (zip letters), a product line."
+      "reason": "'Zip letters' are a type of changeable letter commonly used for marquee signs, which 'Alphabet Signs' sells."
     },
     {
       "term": "outdoor letter signs",
-      "reason": "Directly refers to a core product: 'letters for signs'."
+      "reason": "High-intent query for letters for outdoor signs, a core offering."
     },
     {
       "term": "gemini signs",
-      "reason": "Gemini is a well-known manufacturer of high-end dimensional letters, which Alphabet Signs sells. This is a high-intent search for a specific product type."
+      "reason": "Similar to 'gemini letters', indicates high commercial intent for dimensional/changeable sign products."
     },
     {
       "term": "sign letters outdoor",
-      "reason": "Directly refers to a core product: 'letters for signs'."
-    },
-    {
-      "term": "dot number placement",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
-    },
-    {
-      "term": "dot door magnets",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
-    },
-    {
-      "term": "wagner zip change",
-      "reason": "Wagner Zip-Change is a brand of changeable marquee letters, a core product line."
-    },
-    {
-      "term": "letters for signs outdoors",
-      "reason": "Directly refers to a core product: 'letters for signs'."
-    },
-    {
-      "term": "sign marquee",
-      "reason": "High-intent for marquee signs and letters, a core product."
-    },
-    {
-      "term": "pronto letters",
-      "reason": "Pronto is a brand of changeable marquee letters, a core product line."
+      "reason": "Direct commercial intent for outdoor sign letters, a core product."
     },
     {
       "term": "changeable letters for outdoor signs",
-      "reason": "Directly refers to a core product: 'letters for signs'."
+      "reason": "Direct commercial intent for marquee or church sign letters, a core product."
     },
     {
       "term": "metal letters for signs",
-      "reason": "High-intent for metal dimensional letters, a core product."
+      "reason": "Indicates commercial intent for metal dimensional letters, a core product."
     },
     {
       "term": "outdoor sign letter",
-      "reason": "Directly refers to a core product: 'letters for signs'."
+      "reason": "High-intent query for outdoor sign letters, a core offering."
     },
     {
       "term": "marquee sign",
-      "reason": "High-intent for marquee signs and letters, a core product."
+      "reason": "Indicates interest in a full marquee sign, for which 'Alphabet Signs' sells the letters, suggesting a related commercial need."
     },
     {
       "term": "8 on 10 marquee letters",
-      "reason": "Specific size and style of 'marquee letters', a core product."
-    },
-    {
-      "term": "dot magnets for trucks",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "Specific size query for a core product, indicating high commercial intent."
     },
     {
       "term": "raised aluminum letters",
-      "reason": "Specific type of high-end dimensional letter, a core product."
+      "reason": "Direct commercial intent for a specific type of dimensional letter, a core product."
     },
     {
       "term": "dot lettering",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
-    },
-    {
-      "term": "truck magnets for business",
-      "reason": "Relevant to 'commercial vehicle graphics'."
+      "reason": "General but commercial intent for lettering compliant with DOT regulations, a type of commercial vehicle graphics."
     },
     {
       "term": "zip letters",
-      "reason": "Refers to changeable copy letters (zip letters), a product line."
+      "reason": "A type of changeable letter commonly used for marquee signs, which 'Alphabet Signs' sells."
     },
     {
       "term": "letters for buildings outdoor",
-      "reason": "High-intent query for dimensional letters for buildings, a core product."
+      "reason": "High-intent query for dimensional letters for building exteriors, a core product."
     },
     {
       "term": "letter signs for business",
-      "reason": "High-intent query for business signage letters, a core product."
+      "reason": "Direct commercial intent for business signage letters, a core product."
     },
     {
       "term": "plastic marquee letters",
-      "reason": "Specific material type of 'marquee letters', a core product."
+      "reason": "Specific material query for a core product, indicating high commercial intent."
     },
     {
       "term": "changeable letter church signs",
-      "reason": "Directly refers to 'church sign letters', a core product."
+      "reason": "Direct commercial intent for church sign letters, a core product."
     },
     {
       "term": "letters for signs",
-      "reason": "Directly refers to a core product: 'letters for signs'."
+      "reason": "General but high-intent query for letters used on signs, aligning with 'Alphabet Signs' core offerings."
     },
     {
       "term": "marquee sign letters",
-      "reason": "Specific product related to 'marquee letters'."
+      "reason": "Direct commercial intent for letters for marquee signs, a core product."
     },
     {
       "term": "metal sign letters and numbers",
-      "reason": "High-intent for metal dimensional letters, a core product."
+      "reason": "Indicates commercial intent for metal dimensional letters, a core product."
     },
     {
       "term": "outdoor sign letters and numbers",
-      "reason": "Directly refers to a core product: 'letters for signs'."
+      "reason": "High-intent query for outdoor sign letters and numbers, a core offering."
     },
     {
       "term": "truck lettering near me",
-      "reason": "High-intent, geo-modified search for 'commercial vehicle graphics'."
+      "reason": "Strong commercial intent for 'commercial vehicle graphics' with a local modifier, a core product."
     },
     {
       "term": "dot decal",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "Commercial vehicle graphics, a core product."
     },
     {
       "term": "molded letters",
-      "reason": "Specific type of high-end dimensional letter, a core product."
+      "reason": "A type of dimensional letter, indicating commercial intent for a core product."
     },
     {
       "term": "marquee lettering",
-      "reason": "A primary product offered by Alphabet Signs."
+      "reason": "Direct commercial intent for marquee letters, a core product."
     },
     {
       "term": "reader board letters",
-      "reason": "High-intent for changeable copy letters, a core product line ('marquee letters')."
+      "reason": "Synonymous with marquee letters, indicating strong commercial intent for a core product."
     },
     {
       "term": "acrylic letters for signs",
-      "reason": "Specific type of high-end dimensional letter, a core product."
+      "reason": "Specific material query for a type of dimensional letter, a core product."
     },
     {
       "term": "stainless steel sign letters",
-      "reason": "Specific type of high-end dimensional letter, a core product."
+      "reason": "Specific material query for a type of dimensional letter, a core product."
     },
     {
       "term": "wagner zip change letters",
-      "reason": "Wagner Zip-Change is a brand of changeable marquee letters, a core product line."
+      "reason": "Wagner Zip Change is a well-known brand for changeable marquee letters. This term indicates high commercial intent for a type of marquee letter sold by 'Alphabet Signs'."
     },
     {
       "term": "exterior letters for buildings",
-      "reason": "High-intent query for dimensional letters for buildings, a core product."
-    },
-    {
-      "term": "dot magnets for trucks",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "High-intent query for dimensional letters for building exteriors, a core product."
     },
     {
       "term": "alphabet signs",
-      "reason": "This is a brand search for 'Alphabet Signs' itself, indicating direct interest in the company."
+      "reason": "This is a brand search for 'Alphabet Signs' itself, indicating direct user intent to find the company."
     },
     {
       "term": "10 sign letters",
-      "reason": "Specific size of 'letters for signs', a core product."
+      "reason": "Specific size query for sign letters, indicating commercial intent."
     },
     {
       "term": "marquee letter signs",
-      "reason": "High-intent for marquee signs and letters, a core product."
+      "reason": "Direct commercial intent for marquee letters or signs using them, a core product."
     },
     {
       "term": "aluminum sign letters",
-      "reason": "Specific type of high-end dimensional letter, a core product."
+      "reason": "Specific material query for a type of dimensional letter, a core product."
     },
     {
       "term": "sign channel letters",
-      "reason": "Specific type of high-end dimensional letter, a core product."
+      "reason": "A specific type of dimensional letter ('channel letters') commonly used for commercial signs, a core product."
     },
     {
       "term": "letters for marquee sign",
-      "reason": "Directly refers to 'marquee letters', a core product."
-    },
-    {
-      "term": "dot truck labeling requirements",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics' and indicating informational intent for a service Alphabet Signs might provide or complement."
-    },
-    {
-      "term": "aluminum letters",
-      "reason": "Specific type of high-end dimensional letter, a core product."
+      "reason": "Direct commercial intent for letters for marquee signs, a core product."
     },
     {
       "term": "gemini changeable copy letters",
-      "reason": "Gemini is a well-known manufacturer of changeable copy letters, which Alphabet Signs sells. This is a high-intent search for a specific product type."
+      "reason": "Similar to 'gemini letters' and 'wagner zip change letters', this refers to a well-known brand and type of changeable letter, indicating high commercial intent for marquee letters."
     },
     {
       "term": "custom aluminum letters",
@@ -360,35 +297,39 @@
     },
     {
       "term": "church sign letters",
-      "reason": "A primary product offered by Alphabet Signs."
+      "reason": "A direct core product offering, indicating high commercial intent."
     },
     {
       "term": "raised letter signs",
-      "reason": "Specific type of high-end dimensional letter, a core product."
+      "reason": "Indicates commercial intent for dimensional letters, a core product."
     },
     {
       "term": "outdoor letters for buildings",
-      "reason": "High-intent query for dimensional letters for buildings, a core product."
+      "reason": "High-intent query for dimensional letters for building exteriors, a core product."
     },
     {
       "term": "changeable letter signs",
-      "reason": "Directly refers to changeable copy letters, a core product."
+      "reason": "Direct commercial intent for marquee or church sign letters, a core product."
     },
     {
       "term": "dot number stickers",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "Commercial vehicle graphics, a core product."
     },
     {
       "term": "5 inch marquee sign letters",
-      "reason": "Specific size of 'marquee letters', a core product."
+      "reason": "Specific size query for a core product, indicating high commercial intent."
     },
     {
       "term": "marquee board letters",
-      "reason": "High-intent for marquee signs and letters, a core product."
+      "reason": "Direct commercial intent for letters for marquee boards, a core product."
     },
     {
       "term": "dot sticker",
-      "reason": "Related to DOT compliant signage, falling under 'commercial vehicle graphics'."
+      "reason": "Commercial vehicle graphics, a core product."
+    },
+    {
+      "term": "large lettering for walls",
+      "reason": "Can imply large dimensional letters for commercial building walls, aligning with 'Alphabet Signs' core offering."
     }
   ]
 }

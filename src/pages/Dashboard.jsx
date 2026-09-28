@@ -45,6 +45,7 @@ export default function Dashboard() {
     roas: "1.92",
     conversions: "430.25",
     avgCpa: "$69.39",
+    dateRange: "May 13 – Jun 11"
   });
 
   // Calculate stats on mount from your actual live product feed and gemini logs!
@@ -75,6 +76,20 @@ export default function Dashboard() {
       const shielded = localRecommendations.falsePositivesSafety || [];
       setProtectedKeywordsCount(shielded.length);
     }
+
+    // 3. Fetch live dashboard metrics from the local server
+    const fetchLiveStats = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/api/dashboard/stats");
+        if (response.ok) {
+          const data = await response.json();
+          setMetrics(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch live dashboard stats:", err);
+      }
+    };
+    fetchLiveStats();
   }, []);
 
   // Trigger Gemini Multi-Stage Audit
@@ -214,7 +229,7 @@ export default function Dashboard() {
             {metrics.spend}
           </p>
           <span className="text-[11px] text-slate-400 font-medium">
-            May 13 – Jun 11
+            {metrics.dateRange}
           </span>
         </div>
 
