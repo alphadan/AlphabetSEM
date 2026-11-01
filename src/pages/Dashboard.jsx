@@ -440,8 +440,32 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Side Audit Log */}
+        {/* Side Audit Log & Strategy Milestones */}
         <div className="space-y-6">
+          {/* Scheduled Strategy Milestones */}
+          <div className="space-y-3">
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+              <Clock className="h-5 w-5 text-blue-600" />
+              Scheduled Milestones
+            </h2>
+            <div className="bg-slate-900 text-white rounded-xl p-5 shadow-md border border-slate-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-extrabold bg-blue-600 text-white px-2 py-0.5 rounded uppercase tracking-wide">
+                  Spring Relaunch
+                </span>
+                <span className="text-xs font-mono text-blue-400 font-bold">
+                  Apr 01, 2027
+                </span>
+              </div>
+              <strong className="text-sm font-extrabold text-slate-100 block">
+                Unpause 'Magnetic Signs | Shopping | Core'
+              </strong>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Seasonal spring launch for vehicle magnetic door plates. Verify Item ID subdivisions on high-AOV <code className="bg-slate-800 px-1 py-0.5 rounded text-blue-300 font-mono">vl0733</code> truck door sets and set Target ROAS to 200% with $3.50 Max CPC cap.
+              </p>
+            </div>
+          </div>
+
           <h2 className="text-xl font-bold text-slate-900">Optimization Log</h2>
           <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
             <ul className="space-y-4 text-xs">

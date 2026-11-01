@@ -192,13 +192,12 @@ export default function GoogleAds() {
     {
       id: "c7",
       name: "Magnetic Signs | Shopping | Core",
-      roas: "2.46",
-      label: "Conversion Goldmine",
+      roas: "0.98",
+      label: "Seasonal Pause (Apr 2027)",
       strategy: "Target ROAS 200% - Max CPC $3.50",
-      status: "ENABLED",
-      type: "Shopping",
-      customCPC: "$3.50 Max CPC",
-      note: "Massive conversion driver for magnetic truck door plates. Desktop conversion rates exceed 20%.",
+      status: "PAUSED",
+      customCPC: "Paused for Winter",
+      note: "Paused for autumn/winter seasonality. Scheduled to unpause in April 2027 with B2C negative lists and item-level subdivisions on high-AOV truck door magnetics (vl0733).",
     },
     {
       id: "c8",
