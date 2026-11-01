@@ -269,6 +269,17 @@ export default function GoogleAds() {
       type: "Shopping",
       customCPC: "$50.00/day Budget",
       note: "Newly launched. Targeting high-AOV enclosed bulletin boards and community message centers. Open Face Letter Boards prioritized as a high-potential bestseller.",
+    },
+    {
+      id: "c13",
+      name: "Catch All | Shopping | Yard Signs",
+      roas: "1.38",
+      label: "Seasonal Pause (Apr 2027)",
+      strategy: "Target ROAS Portfolio 200% - Max CPC $1.50",
+      status: "PAUSED",
+      type: "Shopping",
+      customCPC: "Paused for Winter",
+      note: "Paused for winter seasonality. Scheduled to unpause on April 1, 2027 with B2C event negative lists and item-level subdivisions on Fall/Harvest and Nursery Bestsellers (cs4079, cs4067).",
     }
   ]);
 

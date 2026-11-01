@@ -464,6 +464,23 @@ export default function Dashboard() {
                 Seasonal spring launch for vehicle magnetic door plates. Verify Item ID subdivisions on high-AOV <code className="bg-slate-800 px-1 py-0.5 rounded text-blue-300 font-mono">vl0733</code> truck door sets and set Target ROAS to 200% with $3.50 Max CPC cap.
               </p>
             </div>
+
+            <div className="bg-slate-900 text-white rounded-xl p-5 shadow-md border border-slate-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-extrabold bg-emerald-600 text-white px-2 py-0.5 rounded uppercase tracking-wide">
+                  Spring Relaunch
+                </span>
+                <span className="text-xs font-mono text-emerald-400 font-bold">
+                  Apr 01, 2027
+                </span>
+              </div>
+              <strong className="text-sm font-extrabold text-slate-100 block">
+                Unpause 'Catch All | Shopping | Yard Signs'
+              </strong>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Seasonal launch for roadside farm stand, nursery, and contractor jobsite signs. Unpause Spring produce SKUs, set Target ROAS to 200%, and apply $1.50 Max CPC cap.
+              </p>
+            </div>
           </div>
 
           <h2 className="text-xl font-bold text-slate-900">Optimization Log</h2>
